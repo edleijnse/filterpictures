@@ -7,6 +7,18 @@
     <groupId>leijnse.info</groupId>
     <artifactId>filterpictures</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -15,12 +27,13 @@
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/xstream/xstream -->
+        <!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream -->
         <dependency>
-            <groupId>xstream</groupId>
+            <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
-            <version>1.2.2</version>
+            <version>1.4.3</version>
         </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
