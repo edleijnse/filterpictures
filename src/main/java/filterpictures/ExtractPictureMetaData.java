@@ -58,19 +58,26 @@ public class ExtractPictureMetaData {
         }
         return myPictureMetadata;
     }
+    void appendkomma(FileWriter fileWriter) throws IOException {
+        fileWriter.append(",");
+    }
     void handleDirectory(FileWriter fileWriter, String startsWithDirectory)  {
         try {
             Files.list(Paths.get(startsWithDirectory)).forEach(item -> {
                 File file = item.toFile();
                 if (file.isFile()){
                     System.out.println("file: " + file.getAbsolutePath());
-                    if ((file.getAbsolutePath().endsWith(".cr2")) || (file.getAbsolutePath().endsWith(".cr3")) || (file.getAbsolutePath().endsWith("jpg"))){
+                    if ((file.getAbsolutePath().toLowerCase().endsWith(".cr2")) || (file.getAbsolutePath().toLowerCase().endsWith(".cr3")) || (file.getAbsolutePath().toLowerCase().endsWith("jpg"))){
                         try {
-                            PictureMetaData myMetatdata = getPictureMetaData(file);
-                            if (myMetatdata.getDateTime().isPresent()) {
-                                fileWriter.append(myMetatdata.getDateTime().get());
+                            PictureMetaData myMetadata = getPictureMetaData(file);
+                            if (myMetadata.getPictureName().isPresent()){
+                                fileWriter.append(myMetadata.getPictureName().get());
                             }
-                            fileWriter.append(",");
+                            appendkomma(fileWriter);
+                            if (myMetadata.getDateTime().isPresent()) {
+                                fileWriter.append(myMetadata.getDateTime().get());
+                            }
+                            appendkomma(fileWriter);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
