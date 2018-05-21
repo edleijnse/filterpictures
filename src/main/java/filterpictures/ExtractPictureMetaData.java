@@ -17,6 +17,7 @@ public class ExtractPictureMetaData {
         myPictureMetadata.setAbsolutePath(Optional.of(file.getAbsolutePath()));
         myPictureMetadata.setCanonicalPath(Optional.of(file.getCanonicalPath()));
         try {
+
             Metadata metadata = ImageMetadataReader.readMetadata(file);
             if (metadata != null) {
                 metadata.getDirectories().forEach(directory -> {

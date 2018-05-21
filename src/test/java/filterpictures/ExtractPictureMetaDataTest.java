@@ -1,6 +1,6 @@
 package filterpictures;
 import com.thoughtworks.xstream.XStream;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
