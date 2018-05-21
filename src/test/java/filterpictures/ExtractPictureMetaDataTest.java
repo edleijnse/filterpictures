@@ -24,4 +24,14 @@ public class ExtractPictureMetaDataTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void createCSVFileTest(){
+        ExtractPictureMetaData testee = new ExtractPictureMetaData();
+        try {
+            testee.createCSVFile("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

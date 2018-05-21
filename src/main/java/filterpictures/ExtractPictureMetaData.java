@@ -6,7 +6,10 @@ import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Metadata;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 public class ExtractPictureMetaData {
@@ -54,6 +57,47 @@ public class ExtractPictureMetaData {
             e.printStackTrace();
         }
         return myPictureMetadata;
+    }
+    void handleDirectory(FileWriter fileWriter, String startsWithDirectory)  {
+        try {
+            Files.list(Paths.get(startsWithDirectory)).forEach(item -> {
+                File file = item.toFile();
+                if (file.isFile()){
+                    System.out.println("file: " + file.getAbsolutePath());
+                    if ((file.getAbsolutePath().endsWith(".cr2")) || (file.getAbsolutePath().endsWith(".cr3")) || (file.getAbsolutePath().endsWith("jpg"))){
+                        try {
+                            PictureMetaData myMetatdata = getPictureMetaData(file);
+                            if (myMetatdata.getDateTime().isPresent()) {
+                                fileWriter.append(myMetatdata.getDateTime().get());
+                            }
+                            fileWriter.append(",");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                } else {
+                    System.out.println("directory: " + file.getAbsolutePath());
+                    handleDirectory(fileWriter, file.getAbsolutePath());
+                }
+
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    Integer createCSVFile(String startsWithDirectory, String csvFile) throws IOException {
+        Integer selectedFiles = 0;
+        FileWriter fileWriter = new FileWriter(csvFile);
+        String CSV_HEADER = "pictureName,dateTime,aperture,exposure,make,model,lenseModel,lenseDescription";
+        fileWriter.append(CSV_HEADER);
+        handleDirectory(fileWriter, startsWithDirectory);
+
+        fileWriter.flush();
+        fileWriter.close();
+
+
+        return selectedFiles;
     }
 
 }
