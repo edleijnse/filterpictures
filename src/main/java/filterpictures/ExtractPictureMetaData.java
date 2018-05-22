@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class ExtractPictureMetaData {
 
-    PictureMetaData getPictureMetaData(File file) throws IOException {
+    public PictureMetaData getPictureMetaData(File file) throws IOException {
         PictureMetaData myPictureMetadata = new PictureMetaData();
         myPictureMetadata.setPictureName(Optional.of(file.getName()));
         myPictureMetadata.setAbsolutePath(Optional.of(file.getAbsolutePath()));
@@ -123,7 +123,7 @@ public class ExtractPictureMetaData {
             e.printStackTrace();
         }
     }
-    void createCSVFile(String startsWithDirectory, String csvFile) throws IOException {
+    public void createCSVFile(String startsWithDirectory, String csvFile) throws IOException {
         FileWriter fileWriter = new FileWriter(csvFile);
         String CSV_HEADER = "pictureName,dateTime,aperture,exposure,make,model,lenseModel,lenseDescription";
         fileWriter.append(CSV_HEADER);
