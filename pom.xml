@@ -6,11 +6,11 @@
 
     <groupId>leijnse.info</groupId>
     <artifactId>filterpictures</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <name>filterpictures</name>
-    <url>https://jitpack.io/#jitpack/filterpictures/1.0.0</url>
+    <url>https://jitpack.io/#jitpack/filterpictures/1.0.1</url>
     <build>
         <plugins>
             <plugin>

@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class ExtractPictureMetaDataTest {
     @Test
     public void getPictureMetaDataTest(){
-        ExtractPictureMetaData testee = new ExtractPictureMetaData();
+        ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
         File myFile = new File("src/main/resources/ExportTest/famromano-100.jpg");
         try {
             PictureMetaData output = testee.getPictureMetaData(myFile);
@@ -27,7 +27,7 @@ public class ExtractPictureMetaDataTest {
 
     @Test
     public void createCSVFileTest(){
-        ExtractPictureMetaData testee = new ExtractPictureMetaData();
+        ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
         try {
             testee.createCSVFile("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
         } catch (IOException e) {

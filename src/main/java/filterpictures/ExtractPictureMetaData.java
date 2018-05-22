@@ -13,6 +13,13 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 public class ExtractPictureMetaData {
+    String startsWithDirectory;
+    String csvFile;
+
+    public ExtractPictureMetaData(String startsWithDirectory, String csvFile){
+        this.startsWithDirectory = startsWithDirectory;
+        this.csvFile = csvFile;
+    }
 
     public PictureMetaData getPictureMetaData(File file) throws IOException {
         PictureMetaData myPictureMetadata = new PictureMetaData();
@@ -122,6 +129,9 @@ public class ExtractPictureMetaData {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public void createCSVFile() throws IOException {
+        createCSVFile(this.startsWithDirectory,this.csvFile);
     }
     public void createCSVFile(String startsWithDirectory, String csvFile) throws IOException {
         FileWriter fileWriter = new FileWriter(csvFile);
