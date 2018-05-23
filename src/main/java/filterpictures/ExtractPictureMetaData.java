@@ -91,10 +91,6 @@ public class ExtractPictureMetaData {
                                 fileWriter.append(myMetadata.getAperture().get());
                             }
                             appendkomma(fileWriter);
-                            if (myMetadata.getAperture().isPresent()) {
-                                fileWriter.append(myMetadata.getAperture().get());
-                            }
-                            appendkomma(fileWriter);
                             if (myMetadata.getExposure().isPresent()) {
                                 fileWriter.append(myMetadata.getExposure().get());
                             }
