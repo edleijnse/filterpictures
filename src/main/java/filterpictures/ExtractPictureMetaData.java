@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class ExtractPictureMetaData {
     String startsWithDirectory;
@@ -126,18 +127,99 @@ public class ExtractPictureMetaData {
             e.printStackTrace();
         }
     }
-    public void createCSVFile() throws IOException {
-        createCSVFile(this.startsWithDirectory,this.csvFile);
+    void handleDirectoryCompletableFuture(FileWriter fileWriter, CompletableFuture<String> startsWithDirectory)  {
+        try {
+            Files.list(Paths.get(startsWithDirectory.get())).forEach(item -> {
+                File file = item.toFile();
+                if (file.isFile()){
+                    if ((file.getAbsolutePath().toLowerCase().endsWith(".cr2")) || (file.getAbsolutePath().toLowerCase().endsWith(".cr3")) || (file.getAbsolutePath().toLowerCase().endsWith("jpg"))){
+                        try {
+                            PictureMetaData myMetadata = getPictureMetaData(file);
+                            if (myMetadata.getPictureName().isPresent()){
+                                fileWriter.append(myMetadata.getPictureName().get());
+                            }
+                            appendkomma(fileWriter);
+                            if (myMetadata.getDateTime().isPresent()) {
+                                fileWriter.append(myMetadata.getDateTime().get());
+                            }
+                            appendkomma(fileWriter);
+                            if (myMetadata.getAperture().isPresent()) {
+                                fileWriter.append(myMetadata.getAperture().get());
+                            }
+                            appendkomma(fileWriter);
+                            if (myMetadata.getExposure().isPresent()) {
+                                fileWriter.append(myMetadata.getExposure().get());
+                            }
+                            appendkomma(fileWriter);
+                            if (myMetadata.getMake().isPresent()) {
+                                fileWriter.append(myMetadata.getMake().get());
+                            }
+                            appendkomma(fileWriter);
+                            if (myMetadata.getModel().isPresent()) {
+                                fileWriter.append(myMetadata.getModel().get());
+                            }
+                            appendkomma(fileWriter);
+                            if (myMetadata.getLenseModel().isPresent()) {
+                                fileWriter.append(myMetadata.getLenseModel().get());
+                            }
+                            appendkomma(fileWriter);
+                            if (myMetadata.getLenseDescription().isPresent()) {
+                                fileWriter.append(myMetadata.getLenseDescription().get());
+                            }
+                            appendnewline(fileWriter);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                } else {
+                    handleDirectory(fileWriter, file.getAbsolutePath());
+                }
+
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     public void createCSVFile(String startsWithDirectory, String csvFile) throws IOException {
+        final long timeStart = System.currentTimeMillis();
         FileWriter fileWriter = new FileWriter(csvFile);
         String CSV_HEADER = "pictureName,dateTime,aperture,exposure,make,model,lenseModel,lenseDescription";
         fileWriter.append(CSV_HEADER);
         appendnewline(fileWriter);
-        handleDirectory(fileWriter, startsWithDirectory);
+
+
+        //for (int ii=1;ii>4;ii++){
+            handleDirectory(fileWriter, startsWithDirectory);
+        //}
 
         fileWriter.flush();
         fileWriter.close();
+        final long timeEnd = System.currentTimeMillis();
+        System.out.println("Duration: " + (timeEnd - timeStart) + " millisec.");
+    }
+    public void createCSVFileCompletableFuture(String startsWithDirectory, String csvFile) throws IOException {
+        // See https://www.callicoder.com/java-8-completablefuture-tutorial/
+        final long timeStart = System.currentTimeMillis();
+        FileWriter fileWriter = new FileWriter(csvFile);
+        String CSV_HEADER = "pictureName,dateTime,aperture,exposure,make,model,lenseModel,lenseDescription";
+        fileWriter.append(CSV_HEADER);
+        appendnewline(fileWriter);
+
+        CompletableFuture<String> startsWithDirectoryCompletable = CompletableFuture.supplyAsync(()->{
+            return startsWithDirectory;
+        });
+        // for (int ii=1;ii>4;ii++){
+            handleDirectoryCompletableFuture(fileWriter, startsWithDirectoryCompletable);
+        //}
+
+        fileWriter.flush();
+        fileWriter.close();
+        final long timeEnd = System.currentTimeMillis();
+        System.out.println("Duration: " + (timeEnd - timeStart) + " millisec.");
     }
 
 }
