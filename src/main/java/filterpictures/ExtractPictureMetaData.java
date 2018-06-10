@@ -69,7 +69,13 @@ public class ExtractPictureMetaData {
     void appendkomma(FileWriter fileWriter) throws IOException {
         fileWriter.append(",");
     }
+    void appendkomma(StringBuilder fileWriter) throws IOException {
+        fileWriter.append(",");
+    }
     void appendnewline(FileWriter fileWriter) throws IOException {
+        fileWriter.append("\n");
+    }
+    void appendnewline(StringBuilder fileWriter) throws IOException {
         fileWriter.append("\n");
     }
     void handleDirectory(FileWriter fileWriter, String startsWithDirectory)  {
@@ -174,7 +180,11 @@ public class ExtractPictureMetaData {
                     }
 
                 } else {
-                    handleDirectory(fileWriter, file.getAbsolutePath());
+
+                    CompletableFuture<String> startsWithDirectoryCompletable = CompletableFuture.supplyAsync(()->{
+                        return file.getAbsolutePath();
+                    });
+                    handleDirectoryCompletableFuture(fileWriter, startsWithDirectoryCompletable);
                 }
 
             });
@@ -184,6 +194,7 @@ public class ExtractPictureMetaData {
             e.printStackTrace();
         }
     }
+
     public void createCSVFile(String startsWithDirectory, String csvFile) throws IOException {
         final long timeStart = System.currentTimeMillis();
         FileWriter fileWriter = new FileWriter(csvFile);
