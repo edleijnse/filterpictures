@@ -198,6 +198,7 @@ public class ExtractPictureMetaData {
                     }
 
                 } else {
+                    // TODO https://stackoverflow.com/questions/19348248/waiting-on-a-list-of-future
                     CompletableFuture<StringBuilder> future
 
                             = CompletableFuture.supplyAsync(()->handleDirectoryCompletableFutureStringBuilder(file.getAbsolutePath()));
