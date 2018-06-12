@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -36,11 +37,12 @@ public class ExtractPictureMetaDataTest {
     }
 
 
+
     @Test
-    public void createCSVFileCompletableFutureTest(){
+    public void createCSVFileCompletableFutureStringBuilderTest() throws ExecutionException, InterruptedException {
         ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
         try {
-            testee.createCSVFileCompletableFuture("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
+            testee.createCSVFileCompletableFutureStringBuilder("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -9,15 +9,23 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
+
+import static java.util.concurrent.CompletableFuture.*;
 
 public class ExtractPictureMetaData {
     String startsWithDirectory;
     String csvFile;
 
-    public ExtractPictureMetaData(String startsWithDirectory, String csvFile){
+    public ExtractPictureMetaData(String startsWithDirectory, String csvFile) {
         this.startsWithDirectory = startsWithDirectory;
         this.csvFile = csvFile;
     }
@@ -66,27 +74,32 @@ public class ExtractPictureMetaData {
         }
         return myPictureMetadata;
     }
+
     void appendkomma(FileWriter fileWriter) throws IOException {
         fileWriter.append(",");
     }
+
     void appendkomma(StringBuilder fileWriter) throws IOException {
         fileWriter.append(",");
     }
+
     void appendnewline(FileWriter fileWriter) throws IOException {
         fileWriter.append("\n");
     }
+
     void appendnewline(StringBuilder fileWriter) throws IOException {
         fileWriter.append("\n");
     }
-    void handleDirectory(FileWriter fileWriter, String startsWithDirectory)  {
+
+    void handleDirectory(FileWriter fileWriter, String startsWithDirectory) {
         try {
             Files.list(Paths.get(startsWithDirectory)).forEach(item -> {
                 File file = item.toFile();
-                if (file.isFile()){
-                    if ((file.getAbsolutePath().toLowerCase().endsWith(".cr2")) || (file.getAbsolutePath().toLowerCase().endsWith(".cr3")) || (file.getAbsolutePath().toLowerCase().endsWith("jpg"))){
+                if (file.isFile()) {
+                    if ((file.getAbsolutePath().toLowerCase().endsWith(".cr2")) || (file.getAbsolutePath().toLowerCase().endsWith(".cr3")) || (file.getAbsolutePath().toLowerCase().endsWith("jpg"))) {
                         try {
                             PictureMetaData myMetadata = getPictureMetaData(file);
-                            if (myMetadata.getPictureName().isPresent()){
+                            if (myMetadata.getPictureName().isPresent()) {
                                 fileWriter.append(myMetadata.getPictureName().get());
                             }
                             appendkomma(fileWriter);
@@ -133,15 +146,20 @@ public class ExtractPictureMetaData {
             e.printStackTrace();
         }
     }
-    void handleDirectoryCompletableFuture(FileWriter fileWriter, CompletableFuture<String> startsWithDirectory)  {
+
+
+    public StringBuilder handleDirectoryCompletableFutureStringBuilder( String startsWithDirectory) {
+        // http://www.angelikalanger.com/Articles/EffectiveJava/79.Java8.CompletableFuture/79.Java8.CompletableFuture.html
+        StringBuilder fileWriter = new StringBuilder();
         try {
-            Files.list(Paths.get(startsWithDirectory.get())).forEach(item -> {
+
+            Files.list(Paths.get(startsWithDirectory)).forEach(item -> {
                 File file = item.toFile();
-                if (file.isFile()){
-                    if ((file.getAbsolutePath().toLowerCase().endsWith(".cr2")) || (file.getAbsolutePath().toLowerCase().endsWith(".cr3")) || (file.getAbsolutePath().toLowerCase().endsWith("jpg"))){
+                if (file.isFile()) {
+                    if ((file.getAbsolutePath().toLowerCase().endsWith(".cr2")) || (file.getAbsolutePath().toLowerCase().endsWith(".cr3")) || (file.getAbsolutePath().toLowerCase().endsWith("jpg"))) {
                         try {
                             PictureMetaData myMetadata = getPictureMetaData(file);
-                            if (myMetadata.getPictureName().isPresent()){
+                            if (myMetadata.getPictureName().isPresent()) {
                                 fileWriter.append(myMetadata.getPictureName().get());
                             }
                             appendkomma(fileWriter);
@@ -180,19 +198,29 @@ public class ExtractPictureMetaData {
                     }
 
                 } else {
+                    CompletableFuture<StringBuilder> future
 
-                    CompletableFuture<String> startsWithDirectoryCompletable = CompletableFuture.supplyAsync(()->{
-                        return file.getAbsolutePath();
-                    });
-                    handleDirectoryCompletableFuture(fileWriter, startsWithDirectoryCompletable);
+                            = CompletableFuture.supplyAsync(()->handleDirectoryCompletableFutureStringBuilder(file.getAbsolutePath()));
+
+                    try {
+                        StringBuilder myFutureStringBuilder = future.get();
+                        fileWriter.append(myFutureStringBuilder);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                    ;
+
                 }
 
             });
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+        return fileWriter;
     }
 
     public void createCSVFile(String startsWithDirectory, String csvFile) throws IOException {
@@ -204,7 +232,7 @@ public class ExtractPictureMetaData {
 
 
         //for (int ii=1;ii>4;ii++){
-            handleDirectory(fileWriter, startsWithDirectory);
+        handleDirectory(fileWriter, startsWithDirectory);
         //}
 
         fileWriter.flush();
@@ -212,7 +240,10 @@ public class ExtractPictureMetaData {
         final long timeEnd = System.currentTimeMillis();
         System.out.println("Duration: " + (timeEnd - timeStart) + " millisec.");
     }
-    public void createCSVFileCompletableFuture(String startsWithDirectory, String csvFile) throws IOException {
+
+
+
+    public void createCSVFileCompletableFutureStringBuilder(String startsWithDirectory, String csvFile) throws IOException, ExecutionException, InterruptedException {
         // See https://www.callicoder.com/java-8-completablefuture-tutorial/
         final long timeStart = System.currentTimeMillis();
         FileWriter fileWriter = new FileWriter(csvFile);
@@ -220,11 +251,11 @@ public class ExtractPictureMetaData {
         fileWriter.append(CSV_HEADER);
         appendnewline(fileWriter);
 
-        CompletableFuture<String> startsWithDirectoryCompletable = CompletableFuture.supplyAsync(()->{
-            return startsWithDirectory;
-        });
+
         // for (int ii=1;ii>4;ii++){
-            handleDirectoryCompletableFuture(fileWriter, startsWithDirectoryCompletable);
+        StringBuilder fileStringBuilder = new StringBuilder();
+        fileStringBuilder = handleDirectoryCompletableFutureStringBuilder(startsWithDirectory);
+        fileWriter.append(fileStringBuilder);
         //}
 
         fileWriter.flush();
@@ -232,5 +263,6 @@ public class ExtractPictureMetaData {
         final long timeEnd = System.currentTimeMillis();
         System.out.println("Duration: " + (timeEnd - timeStart) + " millisec.");
     }
+
 
 }
