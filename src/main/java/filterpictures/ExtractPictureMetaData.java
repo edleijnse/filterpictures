@@ -9,17 +9,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Stream;
-
-import static java.util.concurrent.CompletableFuture.*;
 
 public class ExtractPictureMetaData {
     String startsWithDirectory;
@@ -151,6 +146,7 @@ public class ExtractPictureMetaData {
     public StringBuilder handleDirectoryCompletableFutureStringBuilder( String startsWithDirectory) {
         // http://www.angelikalanger.com/Articles/EffectiveJava/79.Java8.CompletableFuture/79.Java8.CompletableFuture.html
         StringBuilder fileWriter = new StringBuilder();
+        List<String> myDirectories = new ArrayList<String>();
         try {
 
             Files.list(Paths.get(startsWithDirectory)).forEach(item -> {
@@ -199,22 +195,31 @@ public class ExtractPictureMetaData {
 
                 } else {
                     // TODO https://stackoverflow.com/questions/19348248/waiting-on-a-list-of-future
-                    CompletableFuture<StringBuilder> future
-
-                            = CompletableFuture.supplyAsync(()->handleDirectoryCompletableFutureStringBuilder(file.getAbsolutePath()));
-
-                    try {
-                        StringBuilder myFutureStringBuilder = future.get();
-                        fileWriter.append(myFutureStringBuilder);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                    ;
+                    myDirectories.add(file.getAbsolutePath());
 
                 }
 
+            });
+            List<StringBuilder> stringBuilders = new ArrayList<>();
+            myDirectories.forEach(myDirectory ->{
+                try {
+                    // push und pull kombiniert http://www.angelikalanger.com/Articles/EffectiveJava/79.Java8.CompletableFuture/79.Java8.CompletableFuture.html
+                    stringBuilders.add(CompletableFuture.supplyAsync(()->handleDirectoryCompletableFutureStringBuilder(myDirectory)).get());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            stringBuilders.forEach(cf->{
+
+                try {
+
+                    fileWriter.append(cf) ;
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             });
 
 
@@ -223,6 +228,7 @@ public class ExtractPictureMetaData {
         }
         return fileWriter;
     }
+
 
     public void createCSVFile(String startsWithDirectory, String csvFile) throws IOException {
         final long timeStart = System.currentTimeMillis();

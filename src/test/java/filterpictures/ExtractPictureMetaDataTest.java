@@ -40,9 +40,9 @@ public class ExtractPictureMetaDataTest {
 
     @Test
     public void createCSVFileCompletableFutureStringBuilderTest() throws ExecutionException, InterruptedException {
-        ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
+        ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2017","/Volumes/MyDrive01/MyLightroom.csv" );
         try {
-            testee.createCSVFileCompletableFutureStringBuilder("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
+            testee.createCSVFileCompletableFutureStringBuilder("/Volumes/MyDrive01/Lightroom/2017","/Volumes/MyDrive01/MyLightroom.csv" );
         } catch (IOException e) {
             e.printStackTrace();
         }
