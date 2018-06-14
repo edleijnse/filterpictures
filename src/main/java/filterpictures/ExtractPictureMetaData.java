@@ -200,11 +200,12 @@ public class ExtractPictureMetaData {
                 }
 
             });
-            List<StringBuilder> stringBuilders = new ArrayList<>();
+            List<CompletableFuture<StringBuilder>> stringBuilders = new ArrayList<>();
             myDirectories.forEach(myDirectory ->{
                 try {
                     // push und pull kombiniert http://www.angelikalanger.com/Articles/EffectiveJava/79.Java8.CompletableFuture/79.Java8.CompletableFuture.html
-                    stringBuilders.add(CompletableFuture.supplyAsync(()->handleDirectoryCompletableFutureStringBuilder(myDirectory)).get());
+                    stringBuilders.add(CompletableFuture.supplyAsync(()->handleDirectoryCompletableFutureStringBuilder(myDirectory)));
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -213,9 +214,9 @@ public class ExtractPictureMetaData {
             stringBuilders.forEach(cf->{
 
                 try {
-
-                    fileWriter.append(cf) ;
-
+                    cf.thenAccept( f -> {
+                        fileWriter.append(f);
+                           }).get();
 
                 } catch (Exception e) {
                     e.printStackTrace();
