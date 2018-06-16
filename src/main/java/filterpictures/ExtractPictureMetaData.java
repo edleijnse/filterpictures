@@ -149,8 +149,6 @@ public class ExtractPictureMetaData {
                     .filter(p -> {
                         return ((p.toString().toLowerCase().endsWith(".cr2")) || (p.toString().toLowerCase().endsWith(".jpg")));
                     })
-                 //   .map(p -> p.getParent().getParent())
-                 //   .distinct()
                     .forEach(item -> {
                         File file = item.toFile();
                         if (file.isFile()) {
