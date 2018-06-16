@@ -36,6 +36,16 @@ public class ExtractPictureMetaDataTest {
         }
     }
 
+    @Test
+    public void createCSVFileWalkterTest(){
+        ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
+        try {
+            testee.createCSVFileWalker("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     @Test

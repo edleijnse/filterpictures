@@ -142,12 +142,70 @@ public class ExtractPictureMetaData {
         }
     }
 
+    void handleDirectoryWalker(FileWriter fileWriter, String startsWithDirectory) {
+        try {
 
-    public StringBuilder handleDirectoryCompletableFutureStringBuilder( String startsWithDirectory) {
+            Files.walk(Paths.get(startsWithDirectory))
+                    .filter(p -> {
+                        return ((p.toString().toLowerCase().endsWith(".cr2")) || (p.toString().toLowerCase().endsWith(".jpg")));
+                    })
+                 //   .map(p -> p.getParent().getParent())
+                 //   .distinct()
+                    .forEach(item -> {
+                        File file = item.toFile();
+                        if (file.isFile()) {
+                            try {
+                                PictureMetaData myMetadata = getPictureMetaData(file);
+                                if (myMetadata.getPictureName().isPresent()) {
+                                    fileWriter.append(myMetadata.getPictureName().get());
+                                }
+                                appendkomma(fileWriter);
+                                if (myMetadata.getDateTime().isPresent()) {
+                                    fileWriter.append(myMetadata.getDateTime().get());
+                                }
+                                appendkomma(fileWriter);
+                                if (myMetadata.getAperture().isPresent()) {
+                                    fileWriter.append(myMetadata.getAperture().get());
+                                }
+                                appendkomma(fileWriter);
+                                if (myMetadata.getExposure().isPresent()) {
+                                    fileWriter.append(myMetadata.getExposure().get());
+                                }
+                                appendkomma(fileWriter);
+                                if (myMetadata.getMake().isPresent()) {
+                                    fileWriter.append(myMetadata.getMake().get());
+                                }
+                                appendkomma(fileWriter);
+                                if (myMetadata.getModel().isPresent()) {
+                                    fileWriter.append(myMetadata.getModel().get());
+                                }
+                                appendkomma(fileWriter);
+                                if (myMetadata.getLenseModel().isPresent()) {
+                                    fileWriter.append(myMetadata.getLenseModel().get());
+                                }
+                                appendkomma(fileWriter);
+                                if (myMetadata.getLenseDescription().isPresent()) {
+                                    fileWriter.append(myMetadata.getLenseDescription().get());
+                                }
+                                appendnewline(fileWriter);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public StringBuilder handleDirectoryCompletableFutureStringBuilder(String startsWithDirectory) {
         // http://www.angelikalanger.com/Articles/EffectiveJava/79.Java8.CompletableFuture/79.Java8.CompletableFuture.html
         StringBuilder fileWriter = new StringBuilder();
         List<String> myDirectories = new ArrayList<String>();
         try {
+
 
             Files.list(Paths.get(startsWithDirectory)).forEach(item -> {
                 File file = item.toFile();
@@ -201,22 +259,22 @@ public class ExtractPictureMetaData {
 
             });
             List<CompletableFuture<StringBuilder>> stringBuilders = new ArrayList<>();
-            myDirectories.forEach(myDirectory ->{
+            myDirectories.forEach(myDirectory -> {
                 try {
                     // push und pull kombiniert http://www.angelikalanger.com/Articles/EffectiveJava/79.Java8.CompletableFuture/79.Java8.CompletableFuture.html
-                    stringBuilders.add(CompletableFuture.supplyAsync(()->handleDirectoryCompletableFutureStringBuilder(myDirectory)));
+                    stringBuilders.add(CompletableFuture.supplyAsync(() -> handleDirectoryCompletableFutureStringBuilder(myDirectory)));
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
 
-            stringBuilders.forEach(cf->{
+            stringBuilders.forEach(cf -> {
 
                 try {
-                    cf.thenAccept( f -> {
+                    cf.thenAccept(f -> {
                         fileWriter.append(f);
-                           }).get();
+                    }).get();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -249,6 +307,23 @@ public class ExtractPictureMetaData {
         System.out.println("Duration: " + (timeEnd - timeStart) + " millisec.");
     }
 
+    public void createCSVFileWalker(String startsWithDirectory, String csvFile) throws IOException {
+        final long timeStart = System.currentTimeMillis();
+        FileWriter fileWriter = new FileWriter(csvFile);
+        String CSV_HEADER = "pictureName,dateTime,aperture,exposure,make,model,lenseModel,lenseDescription";
+        fileWriter.append(CSV_HEADER);
+        appendnewline(fileWriter);
+
+
+        //for (int ii=1;ii>4;ii++){
+        handleDirectoryWalker(fileWriter, startsWithDirectory);
+        //}
+
+        fileWriter.flush();
+        fileWriter.close();
+        final long timeEnd = System.currentTimeMillis();
+        System.out.println("Duration: " + (timeEnd - timeStart) + " millisec.");
+    }
 
 
     public void createCSVFileCompletableFutureStringBuilder(String startsWithDirectory, String csvFile) throws IOException, ExecutionException, InterruptedException {
