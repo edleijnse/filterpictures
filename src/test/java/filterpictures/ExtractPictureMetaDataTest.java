@@ -37,7 +37,7 @@ public class ExtractPictureMetaDataTest {
     }
 
     @Test
-    public void createCSVFileWalkterTest(){
+    public void createCSVFileWalkerTest(){
         ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
         try {
             testee.createCSVFileWalker("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
