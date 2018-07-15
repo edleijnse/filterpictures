@@ -4,6 +4,13 @@ package filterpictures;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Metadata;
+import com.thebuzzmedia.exiftool.ExifTool;
+import com.thebuzzmedia.exiftool.ExifToolBuilder;
+import com.thebuzzmedia.exiftool.Tag;
+import com.thebuzzmedia.exiftool.core.StandardTag;
+import com.thebuzzmedia.exiftool.exceptions.UnsupportedFeatureException;
+import com.thebuzzmedia.exiftool.logs.Logger;
+import com.thebuzzmedia.exiftool.logs.LoggerFactory;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -12,13 +19,31 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import static java.util.Arrays.asList;
+
 public class ExtractPictureMetaData {
+    // 20180715 ExifTool Wrapper build in, supports CR3 Format
+    // https://github.com/mjeanroy/exiftool/blob/master/README.md
+
     String startsWithDirectory;
     String csvFile;
+    private static final Logger log = LoggerFactory.getLogger(ExtractPictureMetaData.class);
+
+    private static ExifTool exifTool;
+
+    static {
+        try {
+            exifTool = new ExifToolBuilder().withPoolSize(10).enableStayOpen().build();
+        } catch (UnsupportedFeatureException ex) {
+            // Fallback to simple exiftool instance.
+            exifTool = new ExifToolBuilder().build();
+        }
+    }
 
     public ExtractPictureMetaData(String startsWithDirectory, String csvFile) {
         this.startsWithDirectory = startsWithDirectory;
@@ -66,7 +91,80 @@ public class ExtractPictureMetaData {
             }
         } catch (ImageProcessingException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return myPictureMetadata;
+    }
+
+    public static Map<Tag, String> parseFromExif(File image) throws Exception {
+        // ExifTool path must be defined as a system property (`exiftool.path`),
+        // but path can be set using `withPath` method.
+        return exifTool.getImageMeta(image, asList(
+                StandardTag.MAKE,
+                StandardTag.MODEL,
+                StandardTag.LENS_MODEL,
+                StandardTag.LENS_ID,
+                StandardTag.CREATE_DATE,
+                StandardTag.IMAGE_HEIGHT,
+                StandardTag.IMAGE_WIDTH,
+                StandardTag.ISO,
+                StandardTag.SHUTTER_SPEED,
+                StandardTag.APERTURE,
+                StandardTag.EXPOSURE_COMPENSATION,
+                StandardTag.FOCAL_LENGTH
+        ));
+
+    }
+
+
+    public PictureMetaData getPictureMetaDataExif(File file) throws IOException {
+        // https://github.com/mjeanroy/exiftool
+
+
+        PictureMetaData myPictureMetadata = new PictureMetaData();
+        myPictureMetadata.setPictureName(Optional.of(file.getName()));
+        myPictureMetadata.setAbsolutePath(Optional.of(file.getAbsolutePath()));
+        myPictureMetadata.setCanonicalPath(Optional.of(file.getCanonicalPath()));
+        // ExifTool path must be defined as a system property (`exiftool.path`),
+        // but path can be set using `withPath` method.
+        try {
+            Map<Tag, String> myTags = parseFromExif(file);
+            if (myTags != null) {
+                myTags.forEach((tag, s) -> {
+                    // System.out.println((tag.getName() + ": " + s));
+                    if (tag.getName() == StandardTag.MAKE.getName()) {
+                        myPictureMetadata.setMake(Optional.of(s));
+                    } else if (tag.getName() == StandardTag.MODEL.getName()) {
+                        myPictureMetadata.setModel(Optional.of(s));
+                    } else if (tag.getName() == StandardTag.LENS_MODEL.getName()) {
+                        myPictureMetadata.setLenseModel(Optional.of(s));
+                    } else if (tag.getName() == StandardTag.LENS_ID.getName()) {
+                        myPictureMetadata.setLenseDescription(Optional.of(s));
+                    } else if (tag.getName() == StandardTag.CREATE_DATE.getName()) {
+                        myPictureMetadata.setDateTime(Optional.of(s));
+                    } else if (tag.getName() == StandardTag.IMAGE_HEIGHT.getName()) {
+                        myPictureMetadata.setHeight(Optional.of(s));
+                    } else if (tag.getName() == StandardTag.IMAGE_WIDTH.getName()) {
+                        myPictureMetadata.setWidth(Optional.of(s));
+                    } else if (tag.getName() == StandardTag.ISO.getName()) {
+                        myPictureMetadata.setIso(Optional.of(s));
+                    } else if (tag.getName() == StandardTag.SHUTTER_SPEED.getName()) {
+                        myPictureMetadata.setExposure(Optional.of(s));
+                    } else if (tag.getName() == StandardTag.APERTURE.getName()) {
+                        myPictureMetadata.setAperture(Optional.of(s));
+                    } else if (tag.getName() == StandardTag.EXPOSURE_COMPENSATION.getName()) {
+                        myPictureMetadata.setExposureBias((Optional.of(s)));
+                    } else if (tag.getName() == StandardTag.FOCAL_LENGTH.getName()) {
+                        myPictureMetadata.setFocalLength(Optional.of(s));
+                    }
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         return myPictureMetadata;
     }
 
@@ -147,13 +245,13 @@ public class ExtractPictureMetaData {
 
             Files.walk(Paths.get(startsWithDirectory))
                     .filter(p -> {
-                        return ((p.toString().toLowerCase().endsWith(".cr2")) || (p.toString().toLowerCase().endsWith(".jpg")));
+                        return ((p.toString().toLowerCase().endsWith(".cr2")) || (p.toString().toLowerCase().endsWith(".cr3")) || (p.toString().toLowerCase().endsWith(".jpg")));
                     })
                     .forEach(item -> {
                         File file = item.toFile();
                         if (file.isFile()) {
                             try {
-                                PictureMetaData myMetadata = getPictureMetaData(file);
+                                PictureMetaData myMetadata = getPictureMetaDataExif(file);
                                 if (myMetadata.getPictureName().isPresent()) {
                                     fileWriter.append(myMetadata.getPictureName().get());
                                 }

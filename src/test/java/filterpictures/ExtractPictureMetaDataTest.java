@@ -40,7 +40,11 @@ public class ExtractPictureMetaDataTest {
     public void createCSVFileWalkerTest(){
         ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
         try {
-            testee.createCSVFileWalker("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
+            // Y:\2018
+            // testee.createCSVFileWalker("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
+            // testee.createCSVFileWalker("e:\\lightroom\\2018\\2018-07-08\\","e:\\lightroom\\MyLightroom.csv" );
+            testee.createCSVFileWalker("e:\\lightroom\\2018\\","e:\\lightroom\\MyLightroom.csv" );
+
         } catch (IOException e) {
             e.printStackTrace();
         }
