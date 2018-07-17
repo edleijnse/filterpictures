@@ -648,7 +648,7 @@ public class ExtractPictureMetaData {
                                 }
                                 appendkomma(fileWriter);
                                 if (myMetadata.getGPS_ALTITUDE_REF().isPresent()) {
-                                    fileWriter.append(myMetadata.getLenseDescription().get());
+                                    fileWriter.append(myMetadata.getGPS_ALTITUDE_REF().get());
                                 }
                                 appendkomma(fileWriter);
                                 if (myMetadata.getGPS_SPEED().isPresent()) {
