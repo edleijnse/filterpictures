@@ -41,8 +41,9 @@ public class ExtractPictureMetaDataTest {
         ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
         try {
             // Y:\2018
-            // testee.createCSVFileWalker("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
-            testee.createCSVFileWalker("/Volumes/MyDrive01/Lightroom","/Volumes/MyDrive01/MyLightroom.csv" );
+            testee.createCSVFileWalker("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
+            // testee.createCSVFileWalker("/Volumes/MyDrive01/Lightroom","/Volumes/MyDrive01/MyLightroom.csv" );
+            // testee.createCSVFileWalker("/Volumes/MyDrive01/Lightroom/2018/2018-07-08","/Volumes/MyDrive01/MyLightroom.csv" );
             // testee.createCSVFileWalker("e:\\lightroom\\2018\\2018-07-08\\","e:\\lightroom\\MyLightroom.csv" );
             // testee.createCSVFileWalker("e:\\lightroom\\2018\\","e:\\lightroom\\MyLightroom.csv" );
 
