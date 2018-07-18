@@ -1,10 +1,9 @@
 package filterpictures;
 import com.thoughtworks.xstream.XStream;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -26,24 +25,16 @@ public class ExtractPictureMetaDataTest {
         }
     }
 
-    @Test
-    public void createCSVFileTest(){
-        ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
-        try {
-            testee.createCSVFile("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Test
     public void createCSVFileWalkerTest(){
         ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
         try {
             // Y:\2018
-            testee.createCSVFileWalker("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
+            // testee.createCSVFileWalker("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
             // testee.createCSVFileWalker("/Volumes/MyDrive01/Lightroom","/Volumes/MyDrive01/MyLightroom.csv" );
             // testee.createCSVFileWalker("/Volumes/MyDrive01/Lightroom/2018/2018-07-08","/Volumes/MyDrive01/MyLightroom.csv" );
+            testee.createCSVFileWalker("/Volumes/MyDrive01/Lightroom/2001","/Volumes/MyDrive01/MyLightroom.csv" );
             // testee.createCSVFileWalker("e:\\lightroom\\2018\\2018-07-08\\","e:\\lightroom\\MyLightroom.csv" );
             // testee.createCSVFileWalker("e:\\lightroom\\2018\\","e:\\lightroom\\MyLightroom.csv" );
 
@@ -53,14 +44,4 @@ public class ExtractPictureMetaDataTest {
     }
 
 
-
-    @Test
-    public void createCSVFileCompletableFutureStringBuilderTest() throws ExecutionException, InterruptedException {
-        ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
-        try {
-            testee.createCSVFileCompletableFutureStringBuilder("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
