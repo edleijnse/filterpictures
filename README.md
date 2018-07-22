@@ -1,25 +1,12 @@
 # filterpictures
 with this library you can walk through a directory with subdirectories and extract all picture-bound metadata.
 
-Supported filetypes: jpg, CR2
+Supported filetypes: jpg, CR2 and CR3 (thanks to exifTool)
 
-this utility uses the following repositories to extract the metadata:
+To use the library: always take the latest release
 
-       <dependency>
-            <groupId>com.adobe.xmp</groupId>
-            <artifactId>xmpcore</artifactId>
-            <version>5.1.2</version>
-        </dependency>
-	
-        <dependency>
-            <groupId>com.drewnoakes</groupId>
-            <artifactId>metadata-extractor</artifactId>
-            <version>2.11.0</version>
-            <scope>compile</scope>
-        </dependency>
-	
 To use this library, you can take the added jar file and copy it into your lib library or 
-you can try to add the repository with jitpack (no garantee, not yet thoroughly tested:
+you can try to add the repository with jitpack (no garantee, not yet thoroughly tested, old example:
 
 <repositories>
 		<repository>
