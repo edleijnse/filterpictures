@@ -912,9 +912,11 @@ public class ExtractPictureMetaData {
         }
     }
 
+    public void createCSVFile() throws IOException {
+        this.createCSVFile(startsWithDirectory, csvFile);
+    }
 
-
-    public void createCSVFileWalker(String startsWithDirectory, String csvFile) throws IOException {
+    public void createCSVFile(String startsWithDirectory, String csvFile) throws IOException {
         final long timeStart = System.currentTimeMillis();
         FileWriter fileWriter = new FileWriter(csvFile);
         String CSV_HEADER = "pictureName,dateTime,aperture,exposure,make,model,lenseModel,lenseDescription";
