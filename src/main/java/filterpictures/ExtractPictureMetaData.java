@@ -912,7 +912,9 @@ public class ExtractPictureMetaData {
         }
     }
 
-
+    public void createCSVFile() throws IOException {
+        this.createCSVFileWalker(startsWithDirectory, csvFile);
+    }
 
     public void createCSVFileWalker(String startsWithDirectory, String csvFile) throws IOException {
         final long timeStart = System.currentTimeMillis();
