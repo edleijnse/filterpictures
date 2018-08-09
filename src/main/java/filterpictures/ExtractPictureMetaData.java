@@ -27,8 +27,8 @@ public class ExtractPictureMetaData {
     // 20180715 ExifTool Wrapper build in, supports CR3 Format
     // https://github.com/mjeanroy/exiftool/blob/master/README.md
 
-    String startsWithDirectory;
-    String csvFile;
+    private String startsWithDirectory;
+    private String csvFile;
     private static final Logger log = LoggerFactory.getLogger(ExtractPictureMetaData.class);
 
     private static ExifTool exifTool;
@@ -94,53 +94,6 @@ public class ExtractPictureMetaData {
         return myPictureMetadata;
     }
 
-
-    public PictureMetaData getPictureContent(File file) throws IOException {
-        PictureMetaData myPictureMetadata = new PictureMetaData();
-        myPictureMetadata.setPictureName(Optional.of(file.getName()));
-        myPictureMetadata.setAbsolutePath(Optional.of(file.getAbsolutePath()));
-        myPictureMetadata.setCanonicalPath(Optional.of(file.getCanonicalPath()));
-        try {
-
-            Metadata metadata = ImageMetadataReader.readMetadata(file);
-            if (metadata != null) {
-                metadata.getDirectories().forEach(directory -> {
-                    directory.getTags().forEach(tag -> {
-                        if (tag.getTagName() == "Make") {
-                            myPictureMetadata.setMake(Optional.of(tag.getDescription()));
-                        } else if (tag.getTagName() == "Model") {
-                            myPictureMetadata.setModel(Optional.of(tag.getDescription()));
-                        } else if (tag.getTagName() == "Lens Model") {
-                            myPictureMetadata.setLenseModel(Optional.of(tag.getDescription()));
-                        } else if (tag.getTagName() == "Lens Specification") {
-                            myPictureMetadata.setLenseDescription(Optional.of(tag.getDescription()));
-                        } else if (tag.getTagName() == "Date/Time") {
-                            myPictureMetadata.setDateTime(Optional.of(tag.getDescription()));
-                        } else if (tag.getTagName() == "Image Height") {
-                            myPictureMetadata.setHeight(Optional.of(tag.getDescription()));
-                        } else if (tag.getTagName() == "Image Width") {
-                            myPictureMetadata.setWidth(Optional.of(tag.getDescription()));
-                        } else if (tag.getTagName() == "ISO Speed Ratings") {
-                            myPictureMetadata.setIso(Optional.of(tag.getDescription()));
-                        } else if (tag.getTagName() == "Shutter Speed Value") {
-                            myPictureMetadata.setExposure(Optional.of(tag.getDescription()));
-                        } else if (tag.getTagName() == "Aperture Value") {
-                            myPictureMetadata.setAperture(Optional.of(tag.getDescription()));
-                        } else if (tag.getTagName() == "Exposure Bias Value") {
-                            myPictureMetadata.setExposureBias((Optional.of(tag.getDescription())));
-                        } else if (tag.getTagName() == "Focal Length") {
-                            myPictureMetadata.setFocalLength(Optional.of(tag.getDescription()));
-                        }
-                    });
-                });
-            }
-        } catch (ImageProcessingException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return myPictureMetadata;
-    }
 
     public static Map<Tag, String> parseFromExif(File image) throws Exception {
         // ExifTool path must be defined as a system property (`exiftool.path`),
