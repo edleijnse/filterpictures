@@ -3,7 +3,6 @@ package filterpictures;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
-import org.apache.commons.lang3.StringUtils;
 import com.drew.metadata.Metadata;
 import com.thebuzzmedia.exiftool.ExifTool;
 import com.thebuzzmedia.exiftool.ExifToolBuilder;
@@ -12,18 +11,15 @@ import com.thebuzzmedia.exiftool.core.StandardTag;
 import com.thebuzzmedia.exiftool.exceptions.UnsupportedFeatureException;
 import com.thebuzzmedia.exiftool.logs.Logger;
 import com.thebuzzmedia.exiftool.logs.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import static java.util.Arrays.asList;
 
