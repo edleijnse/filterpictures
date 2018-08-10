@@ -1,23 +1,23 @@
 package filterpictures;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.util.Optional;
-import javax.imageio.ImageIO;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Optional;
 
 public class ExtractPictureContentData {
     private String startsWithDirectory;
@@ -36,7 +36,7 @@ public class ExtractPictureContentData {
         this.csvFile = csvFile;
     }
 
-    public void setSubstringKey(String myKey){
+    public void setSubstringKey(String myKey) {
         subscriptionKey = myKey;
     }
 
@@ -50,9 +50,9 @@ public class ExtractPictureContentData {
         myPictureMetadata.setCanonicalPath(Optional.of(file.getCanonicalPath()));
 
         HttpClient httpclient = new DefaultHttpClient();
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
 
-        try
-        {
+            // use httpClient (no need to close it explicitly)
             URIBuilder builder = new URIBuilder(uriBase);
 
             builder.setParameter("visualFeatures", "Categories,Description,Color,Adult");
@@ -82,19 +82,23 @@ public class ExtractPictureContentData {
             HttpResponse response = httpclient.execute(request);
             HttpEntity entity = response.getEntity();
 
-            if (entity != null)
-            {
+            if (entity != null) {
                 // Format and display the JSON response.
                 String jsonString = EntityUtils.toString(entity);
                 JSONObject json = new JSONObject(jsonString);
                 System.out.println("REST Response:\n");
                 System.out.println(json.toString(2));
             }
+
+        } catch (IOException e) {
+
+            // handle
+            e.printStackTrace();
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
+
 
         return myPictureMetadata;
     }
