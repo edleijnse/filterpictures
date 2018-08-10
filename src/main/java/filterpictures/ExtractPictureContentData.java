@@ -24,7 +24,7 @@ public class ExtractPictureContentData {
     private String csvFile;
 
 
-    public static final String subscriptionKey = "MY-KEY-HERE";
+    private static String subscriptionKey = "MY-KEY-HERE";
 
 
     public static final String uriBase =
@@ -34,6 +34,10 @@ public class ExtractPictureContentData {
     public ExtractPictureContentData(String startsWithDirectory, String csvFile) {
         this.startsWithDirectory = startsWithDirectory;
         this.csvFile = csvFile;
+    }
+
+    public void setSubstringKey(String myKey){
+        subscriptionKey = myKey;
     }
 
 
