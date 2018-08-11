@@ -50,7 +50,6 @@ public class ExtractPictureContentData {
         myPictureMetadata.setAbsolutePath(Optional.of(file.getAbsolutePath()));
         myPictureMetadata.setCanonicalPath(Optional.of(file.getCanonicalPath()));
 
-        HttpClient httpclient = new DefaultHttpClient();
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
 
             // use httpClient (no need to close it explicitly)
@@ -80,7 +79,7 @@ public class ExtractPictureContentData {
 
             request.setEntity(reqEntityF);
 
-            HttpResponse response = httpclient.execute(request);
+            HttpResponse response = httpClient.execute(request);
             HttpEntity entity = response.getEntity();
 
             if (entity != null) {

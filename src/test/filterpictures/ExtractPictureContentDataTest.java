@@ -16,7 +16,7 @@ public class ExtractPictureContentDataTest {
     public void getPictureContentTest(){
         ExtractPictureContentData testee = new ExtractPictureContentData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
 
-        File myFile = new File("src/main/resources/ExportTest/famromano-100.jpg");
+        File myFile = new File("src/main/resources/ExportTest/zuerich-16.jpg");
         try {
             String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/Users/edleijnse/keys/subscriptionKey1")));
             testee.setSubstringKey(mySubscriptionKey);
