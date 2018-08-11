@@ -11,6 +11,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -87,7 +88,24 @@ public class ExtractPictureContentData {
                 String jsonString = EntityUtils.toString(entity);
                 JSONObject json = new JSONObject(jsonString);
                 System.out.println("REST Response:\n");
-                System.out.println(json.toString(2));
+                // System.out.println(json.toString(2));
+                JSONArray descriptionArr = json.getJSONObject("description").getJSONArray("captions");
+                descriptionArr.forEach(element -> {
+                    JSONObject myElement = (JSONObject)element;
+                    String textContent = myElement.getString("text");
+                    System.out.println("content: " + textContent);
+                });
+                JSONArray tagsArr = json.getJSONObject("description").getJSONArray("tags");
+                final String[] myTagsTmp = {""};
+                tagsArr.forEach(element -> {
+                    String tagName = element.toString();
+                    System.out.println(tagName);
+                    myTagsTmp[0] +=element.toString()+"%";
+
+                });
+                String myTags = myTagsTmp[0];
+                System.out.println(myTags);
+
             }
 
         } catch (IOException e) {
