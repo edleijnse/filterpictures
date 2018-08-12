@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -11,7 +13,7 @@ import static junit.framework.TestCase.assertEquals;
 public class ExtractPictureMetaDataTest {
     @Test
     public void getPictureMetaDataTest(){
-        ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
+        ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv", true );
         File myFile = new File("src/main/resources/ExportTest/famromano-100.jpg");
         try {
             PictureMetaData output = testee.getPictureMetaData(myFile);
@@ -27,15 +29,19 @@ public class ExtractPictureMetaDataTest {
 
 
     @Test
-    public void createCSVFileTest(){
-        ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
+    public void createCSVFileTest() throws IOException {
+        ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive02/Lightroom/visionTest","/Volumes/MyDrive02/Lightroom/VisionTest/MyLightroomVision.csv", true );
+        String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/Users/edleijnse/keys/subscriptionKey1")));
+        testee.setSubscriptionKey(mySubscriptionKey);
+
         try {
             // Y:\2018
             // testee.createCSVFile("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
             // testee.createCSVFile("/Volumes/MyDrive01/Lightroom","/Volumes/MyDrive01/MyLightroom.csv" );
-            // testee.createCSVFile("/Volumes/MyDrive01/Lightroom/2018/2018-07-08","/Volumes/MyDrive01/MyLightroom.csv" );
+            testee.createCSVFile("/Volumes/MyDrive02/Lightroom/visionTest",
+                    "/Volumes/MyDrive02/Lightroom/visionTest/MyLightroomVision.csv", true );
             // testee.createCSVFile("/Volumes/MyDrive01/Lightroom/2001","/Volumes/MyDrive01/MyLightroom.csv" );
-            testee.createCSVFile("e:\\lightroom\\2018\\2018-07-08\\","e:\\lightroom\\MyLightroom.csv" );
+            // testee.createCSVFile("e:\\lightroom\\2018\\2018-07-08\\","e:\\lightroom\\MyLightroom.csv",true );
             // testee.createCSVFile("e:\\lightroom\\2018\\","e:\\lightroom\\MyLightroom.csv" );
 
         } catch (IOException e) {

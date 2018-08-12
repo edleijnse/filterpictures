@@ -83,7 +83,24 @@ public class PictureMetaData {
     Optional<String> AVG_BITRATE = Optional.empty();
     Optional<String> MIME_TYPE = Optional.empty();
     Optional<String> CREATE_DATE = Optional.empty();
+    Optional<String> VISION_CONTENT = Optional.empty();
+    Optional<String> VISION_TAGS = Optional.empty();
 
+    public Optional<String> getVISION_CONTENT() {
+        return VISION_CONTENT;
+    }
+
+    public void setVISION_CONTENT(Optional<String> VISION_CONTENT) {
+        this.VISION_CONTENT = VISION_CONTENT;
+    }
+
+    public Optional<String> getVISION_TAGS() {
+        return VISION_TAGS;
+    }
+
+    public void setVISION_TAGS(Optional<String> VISION_TAGS) {
+        this.VISION_TAGS = VISION_TAGS;
+    }
 
     public Optional<String> getISO() {
         return ISO;

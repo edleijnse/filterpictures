@@ -42,13 +42,11 @@ public class ExtractPictureContentData {
     }
 
 
-    public PictureMetaData getPictureContent(File file) throws IOException {
+    public static PictureMetaData getPictureContent(File file) throws Exception {
 
 
-        PictureMetaData myPictureMetadata = new PictureMetaData();
-        myPictureMetadata.setPictureName(Optional.of(file.getName()));
-        myPictureMetadata.setAbsolutePath(Optional.of(file.getAbsolutePath()));
-        myPictureMetadata.setCanonicalPath(Optional.of(file.getCanonicalPath()));
+        PictureMetaData myPictureMetadata = ExtractPictureMetaData.getPictureMetaDataExif(file);
+
 
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
 
@@ -92,18 +90,19 @@ public class ExtractPictureContentData {
                 descriptionArr.forEach(element -> {
                     JSONObject myElement = (JSONObject)element;
                     String textContent = myElement.getString("text");
-                    System.out.println("content: " + textContent);
+                    // System.out.println("content: " + textContent);
+                    myPictureMetadata.setVISION_CONTENT(Optional.ofNullable(textContent));
                 });
                 JSONArray tagsArr = json.getJSONObject("description").getJSONArray("tags");
                 final String[] myTagsTmp = {""};
                 tagsArr.forEach(element -> {
                     String tagName = element.toString();
-                    System.out.println(tagName);
+                    // System.out.println(tagName);
                     myTagsTmp[0] +=element.toString()+"%";
 
                 });
                 String myTags = myTagsTmp[0];
-                System.out.println(myTags);
+                myPictureMetadata.setVISION_TAGS(Optional.ofNullable(myTags));
 
             }
 
