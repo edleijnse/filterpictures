@@ -38,8 +38,10 @@ public class ExtractPictureMetaDataTest {
             // Y:\2018
             // testee.createCSVFile("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
             // testee.createCSVFile("/Volumes/MyDrive01/Lightroom","/Volumes/MyDrive01/MyLightroom.csv" );
-            testee.createCSVFile("/Volumes/MyDrive02/Lightroom/visionTest",
-                    "/Volumes/MyDrive02/Lightroom/visionTest/MyLightroomVision.csv", true );
+            // testee.createCSVFile("/Volumes/MyDrive02/Lightroom/visionTest",
+            //        "/Volumes/MyDrive02/Lightroom/visionTest/MyLightroomVision.csv", true );
+            testee.createCSVFile("/Volumes/MyDrive01/bilderexport/MajaUndJacques",
+                   "/Volumes/MyDrive01/bilderexport/MajaUndJacques/MyLightroomVision.csv", true );
             // testee.createCSVFile("/Volumes/MyDrive01/Lightroom/2001","/Volumes/MyDrive01/MyLightroom.csv" );
             // testee.createCSVFile("e:\\lightroom\\2018\\2018-07-08\\","e:\\lightroom\\MyLightroom.csv",true );
             // testee.createCSVFile("e:\\lightroom\\2018\\","e:\\lightroom\\MyLightroom.csv" );

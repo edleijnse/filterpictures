@@ -12,6 +12,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -30,6 +31,7 @@ public class ExtractPictureContentData {
 
     public static final String uriBase =
             "https://westeurope.api.cognitive.microsoft.com/vision/v1.0/analyze";
+       //    "https://northeurope.api.cognitive.microsoft.com/vision/v1.0/analyze";
 
 
     public ExtractPictureContentData(String startsWithDirectory, String csvFile) {
@@ -86,6 +88,18 @@ public class ExtractPictureContentData {
                 JSONObject json = new JSONObject(jsonString);
                 System.out.println("REST Response:\n");
                 // System.out.println(json.toString(2));
+                String myCode = "";
+                try {
+                    myCode = json.getString("code");
+                    // System.out.println("Code: " + myCode);
+                } catch (Exception e){
+
+                }
+
+                if (myCode.contains("InvalidImageSize")){
+                    System.out.println("Invalid image size");
+                    return myPictureMetadata;
+                }
                 JSONArray descriptionArr = json.getJSONObject("description").getJSONArray("captions");
                 descriptionArr.forEach(element -> {
                     JSONObject myElement = (JSONObject)element;
@@ -113,6 +127,9 @@ public class ExtractPictureContentData {
 
         } catch (URISyntaxException e) {
             e.printStackTrace();
+        } catch (JSONException e){
+            System.out.println("JSON Exception: " + e.getLocalizedMessage());
+
         }
 
 
