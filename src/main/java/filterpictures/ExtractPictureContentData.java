@@ -1,23 +1,24 @@
 package filterpictures;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.util.Optional;
-import javax.imageio.ImageIO;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Optional;
 
 public class ExtractPictureContentData {
     private String startsWithDirectory;
@@ -36,23 +37,20 @@ public class ExtractPictureContentData {
         this.csvFile = csvFile;
     }
 
-    public void setSubstringKey(String myKey){
+    public void setSubstringKey(String myKey) {
         subscriptionKey = myKey;
     }
 
 
-    public PictureMetaData getPictureContent(File file) throws IOException {
+    public static PictureMetaData getPictureContent(File file) throws Exception {
 
 
-        PictureMetaData myPictureMetadata = new PictureMetaData();
-        myPictureMetadata.setPictureName(Optional.of(file.getName()));
-        myPictureMetadata.setAbsolutePath(Optional.of(file.getAbsolutePath()));
-        myPictureMetadata.setCanonicalPath(Optional.of(file.getCanonicalPath()));
+        PictureMetaData myPictureMetadata = ExtractPictureMetaData.getPictureMetaDataExif(file);
 
-        HttpClient httpclient = new DefaultHttpClient();
 
-        try
-        {
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+
+            // use httpClient (no need to close it explicitly)
             URIBuilder builder = new URIBuilder(uriBase);
 
             builder.setParameter("visualFeatures", "Categories,Description,Color,Adult");
@@ -79,22 +77,44 @@ public class ExtractPictureContentData {
 
             request.setEntity(reqEntityF);
 
-            HttpResponse response = httpclient.execute(request);
+            HttpResponse response = httpClient.execute(request);
             HttpEntity entity = response.getEntity();
 
-            if (entity != null)
-            {
+            if (entity != null) {
                 // Format and display the JSON response.
                 String jsonString = EntityUtils.toString(entity);
                 JSONObject json = new JSONObject(jsonString);
                 System.out.println("REST Response:\n");
-                System.out.println(json.toString(2));
+                // System.out.println(json.toString(2));
+                JSONArray descriptionArr = json.getJSONObject("description").getJSONArray("captions");
+                descriptionArr.forEach(element -> {
+                    JSONObject myElement = (JSONObject)element;
+                    String textContent = myElement.getString("text");
+                    // System.out.println("content: " + textContent);
+                    myPictureMetadata.setVISION_CONTENT(Optional.ofNullable(textContent));
+                });
+                JSONArray tagsArr = json.getJSONObject("description").getJSONArray("tags");
+                final String[] myTagsTmp = {""};
+                tagsArr.forEach(element -> {
+                    String tagName = element.toString();
+                    // System.out.println(tagName);
+                    myTagsTmp[0] +=element.toString()+"%";
+
+                });
+                String myTags = myTagsTmp[0];
+                myPictureMetadata.setVISION_TAGS(Optional.ofNullable(myTags));
+
             }
+
+        } catch (IOException e) {
+
+            // handle
+            e.printStackTrace();
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
+
 
         return myPictureMetadata;
     }
