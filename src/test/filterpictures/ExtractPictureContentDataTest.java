@@ -30,6 +30,12 @@ public class ExtractPictureContentDataTest {
         }
     }
 
+    @Test
+    public void compressJpgTest(){
+        File inFile = new File("src/main/resources/ExportTest/famromano-109.jpg");
+        ExtractPictureContentData testee = new ExtractPictureContentData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
+        File myNewFile = testee.compressJpg(inFile);
+    }
 
 
 }
