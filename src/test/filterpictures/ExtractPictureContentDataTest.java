@@ -13,15 +13,16 @@ import static junit.framework.TestCase.assertEquals;
 public class ExtractPictureContentDataTest {
 
     @Test
-    public void getPictureContentTest(){
+    public void getPictureContentTest() throws IOException {
         ExtractPictureContentData testee = new ExtractPictureContentData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
 
 
-        File myFile = new File("src/main/resources/ExportTest/zuerich-16.jpg");
+        File myFile = new File("src/main/resources/ExportTest/bigmountain01.jpg");
+        File myFileCompressed = testee.compressJpg(myFile);
         try {
             String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/Users/edleijnse/keys/subscriptionKey1")));
             testee.setSubstringKey(mySubscriptionKey);
-            PictureMetaData output = testee.getPictureContent(myFile);
+            PictureMetaData output = testee.getPictureContent(myFileCompressed);
             XStream xStream = new XStream();
             System.out.println(xStream.toXML(output));
 
@@ -31,8 +32,8 @@ public class ExtractPictureContentDataTest {
     }
 
     @Test
-    public void compressJpgTest(){
-        File inFile = new File("src/main/resources/ExportTest/famromano-109.jpg");
+    public void compressJpgTest() throws IOException {
+        File inFile = new File("src/main/resources/ExportTest/bigmountain01.jpg");
         ExtractPictureContentData testee = new ExtractPictureContentData("/Volumes/MyDrive01/Lightroom/2018","/Volumes/MyDrive01/MyLightroom.csv" );
         File myNewFile = testee.compressJpg(inFile);
     }
