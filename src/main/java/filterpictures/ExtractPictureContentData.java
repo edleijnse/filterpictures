@@ -8,7 +8,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -49,16 +48,17 @@ public class ExtractPictureContentData {
         subscriptionKey = myKey;
     }
 
-    public File compressJpg (File imageFile){
+    public File compressJpg (File imageFile) throws IOException {
         System.out.println(imageFile.getAbsolutePath());
         String myNewFileName = imageFile.getAbsolutePath();
         myNewFileName = myNewFileName.replace(".jpg","_compressed.jpg");
         System.out.println(myNewFileName);
-        File compressedImageFile = new File (myNewFileName);
+        // File compressedImageFile = new File (myNewFileName);
+        File compressedImageFile = File.createTempFile("pattern", ".suffix");
 
         try (InputStream is = new FileInputStream(imageFile)) {
             OutputStream os = new FileOutputStream(compressedImageFile);
-            float quality = 0.10f;
+            float quality = 0.30f;
             // create a BufferedImage as the result of decoding the supplied InputStream
             BufferedImage image = ImageIO.read(is);
             // get all image writers for JPG format
@@ -78,6 +78,7 @@ public class ExtractPictureContentData {
             writer.write(null, new IIOImage(image, null, null), param);
 
             // close all streams
+            compressedImageFile.deleteOnExit();
             is.close();
             os.close();
             ios.close();
