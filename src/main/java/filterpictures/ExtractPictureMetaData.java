@@ -200,7 +200,7 @@ public class ExtractPictureMetaData {
             if (myTags != null) {
                 myTags.forEach((tag, s) -> {
                     // System.out.println((tag.getName() + ": " + s));
-                    s = s.replaceAll(",",".");
+                    s = s.replaceAll(",", ".");
                     if (tag.getName() == StandardTag.MAKE.getName()) {
                         myPictureMetadata.setMake(Optional.of(s));
                         myPictureMetadata.setMAKE(Optional.of(s));
@@ -384,8 +384,9 @@ public class ExtractPictureMetaData {
     void appendNotfound(FileWriter fileWriter) throws IOException {
         fileWriter.append("-");
     }
+
     void appendItem(FileWriter fileWriter, String item) throws IOException {
-        if (StringUtils.isNotEmpty(item)){
+        if (StringUtils.isNotEmpty(item)) {
             fileWriter.append(item);
         } else {
             appendNotfound(fileWriter);
@@ -404,72 +405,509 @@ public class ExtractPictureMetaData {
         fileWriter.append("\n");
     }
 
-    void handleDirectory(FileWriter fileWriter, String startsWithDirectory) {
-        try {
 
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    void processMetaData(PictureMetaData myMetadata, FileWriter fileWriter) throws IOException {
+        if (myMetadata.getPictureName().isPresent()) {
+            appendItem(fileWriter, myMetadata.getPictureName().get());
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getDateTime().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getDateTime().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getAperture().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getAperture().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getExposure().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getExposure().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getMake().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getMake().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getModel().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getModel().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getLenseModel().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getLenseModel().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getLenseDescription().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getLenseDescription().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getISO().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getISO().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getAPERTURE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getAPERTURE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getWHITE_BALANCE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getWHITE_BALANCE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getBRIGHTNESS().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getBRIGHTNESS().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getCONTRAST().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getCONTRAST().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getSATURATION().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getSATURATION().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getSHARPNESS().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getSHARPNESS().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getSHUTTER_SPEED().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getSHUTTER_SPEED().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getDIGITAL_ZOOM_RATIO().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getDIGITAL_ZOOM_RATIO().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getIMAGE_WIDTH().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getIMAGE_WIDTH().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getIMAGE_HEIGHT().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getIMAGE_HEIGHT().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getX_RESOLUTION().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getX_RESOLUTION().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getY_RESOLUTION().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getY_RESOLUTION().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getFLASH().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getFLASH().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getMETERING_MODE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getMETERING_MODE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getFOCAL_LENGTH().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getFOCAL_LENGTH().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getFOCAL_LENGTH_35MM().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getFOCAL_LENGTH_35MM().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getEXPOSURE_TIME().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getEXPOSURE_TIME().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getEXPOSURE_COMPENSATION().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getEXPOSURE_COMPENSATION().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getEXPOSURE_PROGRAM().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getEXPOSURE_PROGRAM().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getORIENTATION().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getORIENTATION().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getCOLOR_SPACE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getCOLOR_SPACE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getSENSING_METHOD().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getSENSING_METHOD().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getSOFTWARE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getSOFTWARE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getMAKE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getMAKE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getMODEL().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getMODEL().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getLENS_MAKE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getLENS_MAKE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getLENS_MODEL().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getLENS_MODEL().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getOWNER_NAME().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getOWNER_NAME().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getTITLE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getTITLE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getAUTHOR().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getAUTHOR().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getSUBJECT().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getSUBJECT().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getKEYWORDS().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getKEYWORDS().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getCOMMENT().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getCOMMENT().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getRATING().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getRATING().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getRATING_PERCENT().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getRATING_PERCENT().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getDATE_TIME_ORIGINAL().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getDATE_TIME_ORIGINAL().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getGPS_LATITUDE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getGPS_LATITUDE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getGPS_LATITUDE_REF().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getGPS_LATITUDE_REF().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getGPS_LONGITUDE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getGPS_LONGITUDE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getGPS_LONGITUDE_REF().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getGPS_LONGITUDE_REF().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getGPS_ALTITUDE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getGPS_ALTITUDE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getGPS_ALTITUDE_REF().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getGPS_ALTITUDE_REF().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getGPS_SPEED().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getGPS_SPEED().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getGPS_SPEED_REF().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getGPS_SPEED_REF().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getGPS_PROCESS_METHOD().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getGPS_PROCESS_METHOD().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getGPS_BEARING().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getGPS_BEARING().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getGPS_BEARING_REF().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getGPS_BEARING_REF().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getGPS_TIMESTAMP().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getGPS_TIMESTAMP().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getROTATION().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getROTATION().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getEXIF_VERSION().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getEXIF_VERSION().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getLENS_ID().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getLENS_ID().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getCOPYRIGHT().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getCOPYRIGHT().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getARTIST().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getARTIST().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getSUB_SEC_TIME_ORIGINAL().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getSUB_SEC_TIME_ORIGINAL().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getOBJECT_NAME().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getOBJECT_NAME().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getCAPTION_ABSTRACT().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getCAPTION_ABSTRACT().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getCREATOR().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getCREATOR().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getIPTC_KEYWORDS().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getIPTC_KEYWORDS().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getCOPYRIGHT_NOTICE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getCOPYRIGHT_NOTICE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getFILE_TYPE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getFILE_TYPE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getFILE_SIZE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getFILE_SIZE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getAVG_BITRATE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getAVG_BITRATE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getMIME_TYPE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getMIME_TYPE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getCREATE_DATE().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getCREATE_DATE().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getVISION_CONTENT().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getVISION_CONTENT().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendkomma(fileWriter);
+        if (myMetadata.getVISION_TAGS().isPresent()) {
+            appendItem(fileWriter, (myMetadata.getVISION_TAGS().get()));
+        } else {
+            appendNotfound(fileWriter);
+        }
+        appendnewline(fileWriter);
+    }
+
+
+    void handleDirectoryWalker(FileWriter fileWriter, String startsWithDirectory, Boolean withVision) {
+        try {
+            // https://www.codejava.net/java-core/concurrency/java-concurrency-understanding-thread-pool-and-executors
+            // Better: completable Future https://www.deadcoderising.com/java8-writing-asynchronous-code-with-completablefuture/
+            ExecutorService executorService = Executors.newFixedThreadPool(200);
             List<Future<PictureMetaData>> listFuturePictureMetaData = new ArrayList<>();
 
-            Files.list(Paths.get(startsWithDirectory)).forEach(item -> {
-                File file = item.toFile();
-                if (file.isFile()) {
-                    Callable<PictureMetaData> callable = ()->{
-                        PictureMetaData myMetadata = getPictureMetaData(file);
-                        return myMetadata;
-                    };
-                    if ((file.getAbsolutePath().toLowerCase().endsWith(".cr2")) || (file.getAbsolutePath().toLowerCase().endsWith(".cr3")) || (file.getAbsolutePath().toLowerCase().endsWith("jpg"))) {
+            System.out.println("handleDirectoryWalker start");
+            Files.walk(Paths.get(startsWithDirectory))
+                    .filter(p -> {
+                        return ((p.toString().toLowerCase().endsWith(".cr2")) || (p.toString().toLowerCase().endsWith(".cr3")) || (p.toString().toLowerCase().endsWith(".jpg")));
+                    })
+                    .forEach(item -> {
 
-                            // Future List einbauen
-                            // Sample in https://www.callicoder.com/java-callable-and-future-tutorial/
+                        File file = item.toFile();
+                        if (file.isFile()) {
+
+                            Callable<PictureMetaData> callable = () -> {
+
+                                if (withVision){
+                                    ExtractPictureContentData extract = new ExtractPictureContentData(this.startsWithDirectory, this.csvFile);
+                                    extract.setSubstringKey(this.getSubscriptionKey());
+
+                                    PictureMetaData myMetadata = extract.getPictureContent(file);
+                                    return myMetadata;
+                                } else {
+                                    PictureMetaData myMetadata = getPictureMetaDataExif(file);
+                                    return myMetadata;
+                                }
+                            };
                             Future<PictureMetaData> future = executorService.submit(callable);
                             listFuturePictureMetaData.add(future);
 
-                    }
-                    System.out.println("callable gefüllt");
-
-
-                } else {
-                    // TODO erweitern mit Future
-                    handleDirectory(fileWriter, file.getAbsolutePath());
-                    System.out.println("handleDirectory");
-                }
-
-            });
-            listFuturePictureMetaData.forEach(pictureMetaDataFuture -> {
+                         /*   if (withVision) {
+                                handleFileWithVision(fileWriter, file);
+                            } else {
+                                handleFile(fileWriter, file);
+                            }*/
+                        }
+                    });
+            System.out.println("handleDirectoryWalker prepare end, get begin");
+            // http://www.angelikalanger.com/Articles/EffectiveJava/81.Java8.Parallel-Streams/81.Java8.Parallel-Streams.html
+            listFuturePictureMetaData.parallelStream().forEachOrdered(pictureMetaDataFuture -> {
                 try {
                     PictureMetaData myMetadata = pictureMetaDataFuture.get();
-                    if (myMetadata.getPictureName().isPresent()) {
-                        appendItem(fileWriter,(myMetadata.getPictureName().get()));
-                    }
-                    appendkomma(fileWriter);
-                    if (myMetadata.getDateTime().isPresent()) {
-                        appendItem(fileWriter,(myMetadata.getDateTime().get()));
-                    }
-                    appendkomma(fileWriter);
-                    if (myMetadata.getAperture().isPresent()) {
-                        appendItem(fileWriter,(myMetadata.getAperture().get()));
-                    }
-                    appendkomma(fileWriter);
-                    if (myMetadata.getExposure().isPresent()) {
-                        appendItem(fileWriter,(myMetadata.getExposure().get()));
-                    }
-                    appendkomma(fileWriter);
-                    if (myMetadata.getMake().isPresent()) {
-                        appendItem(fileWriter,(myMetadata.getMake().get()));
-                    }
-                    appendkomma(fileWriter);
-                    if (myMetadata.getModel().isPresent()) {
-                        appendItem(fileWriter,(myMetadata.getModel().get()));
-                    }
-                    appendkomma(fileWriter);
-                    if (myMetadata.getLenseModel().isPresent()) {
-                        appendItem(fileWriter,(myMetadata.getLenseModel().get()));
-                    }
-                    appendkomma(fileWriter);
-                    if (myMetadata.getLenseDescription().isPresent()) {
-                        appendItem(fileWriter,(myMetadata.getLenseDescription().get()));
-                    }
-                    appendnewline(fileWriter);
+                    processMetaData(myMetadata, fileWriter);
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -478,510 +916,11 @@ public class ExtractPictureMetaData {
                     e.printStackTrace();
                 }
             });
-            System.out.println("callable verarbeitet");
             executorService.shutdown();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-
-    void processMetaData( PictureMetaData myMetadata, FileWriter fileWriter) throws IOException {
-        if (myMetadata.getPictureName().isPresent()) {
-            appendItem(fileWriter, myMetadata.getPictureName().get());
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getDateTime().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getDateTime().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getAperture().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getAperture().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getExposure().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getExposure().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getMake().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getMake().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getModel().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getModel().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getLenseModel().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getLenseModel().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getLenseDescription().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getLenseDescription().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getISO().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getISO().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getAPERTURE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getAPERTURE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getWHITE_BALANCE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getWHITE_BALANCE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getBRIGHTNESS().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getBRIGHTNESS().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getCONTRAST().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getCONTRAST().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getSATURATION().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getSATURATION().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getSHARPNESS().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getSHARPNESS().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getSHUTTER_SPEED().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getSHUTTER_SPEED().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getDIGITAL_ZOOM_RATIO().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getDIGITAL_ZOOM_RATIO().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getIMAGE_WIDTH().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getIMAGE_WIDTH().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getIMAGE_HEIGHT().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getIMAGE_HEIGHT().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getX_RESOLUTION().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getX_RESOLUTION().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getY_RESOLUTION().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getY_RESOLUTION().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getFLASH().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getFLASH().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getMETERING_MODE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getMETERING_MODE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getFOCAL_LENGTH().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getFOCAL_LENGTH().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getFOCAL_LENGTH_35MM().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getFOCAL_LENGTH_35MM().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getEXPOSURE_TIME().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getEXPOSURE_TIME().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getEXPOSURE_COMPENSATION().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getEXPOSURE_COMPENSATION().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getEXPOSURE_PROGRAM().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getEXPOSURE_PROGRAM().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getORIENTATION().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getORIENTATION().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getCOLOR_SPACE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getCOLOR_SPACE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getSENSING_METHOD().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getSENSING_METHOD().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getSOFTWARE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getSOFTWARE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getMAKE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getMAKE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getMODEL().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getMODEL().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getLENS_MAKE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getLENS_MAKE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getLENS_MODEL().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getLENS_MODEL().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getOWNER_NAME().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getOWNER_NAME().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getTITLE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getTITLE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getAUTHOR().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getAUTHOR().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getSUBJECT().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getSUBJECT().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getKEYWORDS().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getKEYWORDS().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getCOMMENT().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getCOMMENT().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getRATING().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getRATING().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getRATING_PERCENT().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getRATING_PERCENT().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getDATE_TIME_ORIGINAL().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getDATE_TIME_ORIGINAL().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getGPS_LATITUDE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getGPS_LATITUDE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getGPS_LATITUDE_REF().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getGPS_LATITUDE_REF().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getGPS_LONGITUDE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getGPS_LONGITUDE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getGPS_LONGITUDE_REF().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getGPS_LONGITUDE_REF().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getGPS_ALTITUDE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getGPS_ALTITUDE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getGPS_ALTITUDE_REF().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getGPS_ALTITUDE_REF().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getGPS_SPEED().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getGPS_SPEED().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getGPS_SPEED_REF().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getGPS_SPEED_REF().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getGPS_PROCESS_METHOD().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getGPS_PROCESS_METHOD().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getGPS_BEARING().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getGPS_BEARING().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getGPS_BEARING_REF().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getGPS_BEARING_REF().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getGPS_TIMESTAMP().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getGPS_TIMESTAMP().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getROTATION().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getROTATION().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getEXIF_VERSION().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getEXIF_VERSION().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getLENS_ID().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getLENS_ID().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getCOPYRIGHT().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getCOPYRIGHT().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getARTIST().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getARTIST().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getSUB_SEC_TIME_ORIGINAL().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getSUB_SEC_TIME_ORIGINAL().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getOBJECT_NAME().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getOBJECT_NAME().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getCAPTION_ABSTRACT().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getCAPTION_ABSTRACT().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getCREATOR().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getCREATOR().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getIPTC_KEYWORDS().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getIPTC_KEYWORDS().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getCOPYRIGHT_NOTICE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getCOPYRIGHT_NOTICE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getFILE_TYPE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getFILE_TYPE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getFILE_SIZE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getFILE_SIZE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getAVG_BITRATE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getAVG_BITRATE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getMIME_TYPE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getMIME_TYPE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getCREATE_DATE().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getCREATE_DATE().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getVISION_CONTENT().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getVISION_CONTENT().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendkomma(fileWriter);
-        if (myMetadata.getVISION_TAGS().isPresent()) {
-            appendItem(fileWriter,(myMetadata.getVISION_TAGS().get()));
-        } else {
-            appendNotfound(fileWriter);
-        }
-        appendnewline(fileWriter);
-    }
-
-    void handleFile(FileWriter fileWriter, File file){
-        try {
-            PictureMetaData myMetadata = getPictureMetaDataExif(file);
-            processMetaData(myMetadata, fileWriter);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    void handleFileWithVision(FileWriter fileWriter, File file){
-        try {
-            ExtractPictureContentData extract = new ExtractPictureContentData(this.startsWithDirectory,this.csvFile);
-            extract.setSubstringKey(this.getSubscriptionKey());
-
-            PictureMetaData myMetadata = extract.getPictureContent(file);
-            processMetaData(myMetadata, fileWriter);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    void handleDirectoryWalker(FileWriter fileWriter, String startsWithDirectory, Boolean withVision) {
-        try {
-
-            Files.walk(Paths.get(startsWithDirectory))
-                    .filter(p -> {
-                        return ((p.toString().toLowerCase().endsWith(".cr2")) || (p.toString().toLowerCase().endsWith(".cr3")) || (p.toString().toLowerCase().endsWith(".jpg")));
-                    })
-                    .forEach(item -> {
-                        File file = item.toFile();
-                        if (file.isFile()) {
-                            if (withVision){
-                                handleFileWithVision(fileWriter,file);
-                            } else {
-                                handleFile(fileWriter,file);
-                            }
-                        }
-                    });
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println("handleDirectoryWalker completed");
     }
 
     public void createCSVFile() throws IOException {
@@ -1001,7 +940,7 @@ public class ExtractPictureMetaData {
         CSV_HEADER += ",GPS_BEARING, GPS_BEARING_REF, GPS_TIMESTAMP, ROTATION, EXIF_VERSION, LENS_ID";
         CSV_HEADER += ",COPYRIGHT,ARTIST,SUB_SEC_TIME_ORIGINAL, OBJECT_NAME, CAPTION_ABSTRACT,CREATOR,IPTC_KEYWORDS";
         CSV_HEADER += ",COPYRIGHT_NOTICE, FILE_TYPE, FILE_SIZE, AVG_BITRATE, MIME_TYPE, CREATE_DATE, VISION_CONTENT, VISION_TAGS";
-        appendItem(fileWriter,CSV_HEADER);
+        appendItem(fileWriter, CSV_HEADER);
         appendnewline(fileWriter);
 
         handleDirectoryWalker(fileWriter, startsWithDirectory, withVision);

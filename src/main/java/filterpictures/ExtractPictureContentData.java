@@ -137,7 +137,7 @@ public class ExtractPictureContentData {
                 // Format and display the JSON response.
                 String jsonString = EntityUtils.toString(entity);
                 JSONObject json = new JSONObject(jsonString);
-                System.out.println("REST Response:\n");
+                // System.out.println("REST Response:\n");
                 // System.out.println(json.toString(2));
                 String myCode = "";
                 try {
