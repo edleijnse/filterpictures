@@ -18,8 +18,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.*;
 
 import static java.util.Arrays.asList;
 
@@ -403,55 +406,80 @@ public class ExtractPictureMetaData {
 
     void handleDirectory(FileWriter fileWriter, String startsWithDirectory) {
         try {
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            List<Future<PictureMetaData>> listFuturePictureMetaData = new ArrayList<>();
+
             Files.list(Paths.get(startsWithDirectory)).forEach(item -> {
                 File file = item.toFile();
                 if (file.isFile()) {
+                    Callable<PictureMetaData> callable = ()->{
+                        PictureMetaData myMetadata = getPictureMetaData(file);
+                        return myMetadata;
+                    };
                     if ((file.getAbsolutePath().toLowerCase().endsWith(".cr2")) || (file.getAbsolutePath().toLowerCase().endsWith(".cr3")) || (file.getAbsolutePath().toLowerCase().endsWith("jpg"))) {
-                        try {
-                            PictureMetaData myMetadata = getPictureMetaData(file);
-                            if (myMetadata.getPictureName().isPresent()) {
-                                appendItem(fileWriter,(myMetadata.getPictureName().get()));
-                            }
-                            appendkomma(fileWriter);
-                            if (myMetadata.getDateTime().isPresent()) {
-                                appendItem(fileWriter,(myMetadata.getDateTime().get()));
-                            }
-                            appendkomma(fileWriter);
-                            if (myMetadata.getAperture().isPresent()) {
-                                appendItem(fileWriter,(myMetadata.getAperture().get()));
-                            }
-                            appendkomma(fileWriter);
-                            if (myMetadata.getExposure().isPresent()) {
-                                appendItem(fileWriter,(myMetadata.getExposure().get()));
-                            }
-                            appendkomma(fileWriter);
-                            if (myMetadata.getMake().isPresent()) {
-                                appendItem(fileWriter,(myMetadata.getMake().get()));
-                            }
-                            appendkomma(fileWriter);
-                            if (myMetadata.getModel().isPresent()) {
-                                appendItem(fileWriter,(myMetadata.getModel().get()));
-                            }
-                            appendkomma(fileWriter);
-                            if (myMetadata.getLenseModel().isPresent()) {
-                                appendItem(fileWriter,(myMetadata.getLenseModel().get()));
-                            }
-                            appendkomma(fileWriter);
-                            if (myMetadata.getLenseDescription().isPresent()) {
-                                appendItem(fileWriter,(myMetadata.getLenseDescription().get()));
-                            }
-                            appendnewline(fileWriter);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+
+                            // Future List einbauen
+                            // Sample in https://www.callicoder.com/java-callable-and-future-tutorial/
+                            Future<PictureMetaData> future = executorService.submit(callable);
+                            listFuturePictureMetaData.add(future);
 
                     }
+                    System.out.println("callable gefüllt");
+
 
                 } else {
+                    // TODO erweitern mit Future
                     handleDirectory(fileWriter, file.getAbsolutePath());
+                    System.out.println("handleDirectory");
                 }
 
             });
+            listFuturePictureMetaData.forEach(pictureMetaDataFuture -> {
+                try {
+                    PictureMetaData myMetadata = pictureMetaDataFuture.get();
+                    if (myMetadata.getPictureName().isPresent()) {
+                        appendItem(fileWriter,(myMetadata.getPictureName().get()));
+                    }
+                    appendkomma(fileWriter);
+                    if (myMetadata.getDateTime().isPresent()) {
+                        appendItem(fileWriter,(myMetadata.getDateTime().get()));
+                    }
+                    appendkomma(fileWriter);
+                    if (myMetadata.getAperture().isPresent()) {
+                        appendItem(fileWriter,(myMetadata.getAperture().get()));
+                    }
+                    appendkomma(fileWriter);
+                    if (myMetadata.getExposure().isPresent()) {
+                        appendItem(fileWriter,(myMetadata.getExposure().get()));
+                    }
+                    appendkomma(fileWriter);
+                    if (myMetadata.getMake().isPresent()) {
+                        appendItem(fileWriter,(myMetadata.getMake().get()));
+                    }
+                    appendkomma(fileWriter);
+                    if (myMetadata.getModel().isPresent()) {
+                        appendItem(fileWriter,(myMetadata.getModel().get()));
+                    }
+                    appendkomma(fileWriter);
+                    if (myMetadata.getLenseModel().isPresent()) {
+                        appendItem(fileWriter,(myMetadata.getLenseModel().get()));
+                    }
+                    appendkomma(fileWriter);
+                    if (myMetadata.getLenseDescription().isPresent()) {
+                        appendItem(fileWriter,(myMetadata.getLenseDescription().get()));
+                    }
+                    appendnewline(fileWriter);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            System.out.println("callable verarbeitet");
+            executorService.shutdown();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -977,7 +1005,6 @@ public class ExtractPictureMetaData {
         appendnewline(fileWriter);
 
         handleDirectoryWalker(fileWriter, startsWithDirectory, withVision);
-
 
         fileWriter.flush();
         fileWriter.close();
