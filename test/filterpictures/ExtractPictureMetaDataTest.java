@@ -31,7 +31,9 @@ public class ExtractPictureMetaDataTest {
     @Test
     public void createCSVFileTest() throws IOException {
         ExtractPictureMetaData testee = new ExtractPictureMetaData("/Volumes/MyDrive02/Lightroom/visionTest","/Volumes/MyDrive02/Lightroom/VisionTest/MyLightroomVision.csv", true );
-        String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("C:\\Users\\edlei\\OneDrive\\Finanzen\\Lizensen\\Microsoft\\keys\\subscriptionKey1")));
+        // String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("C:\\Users\\edlei\\OneDrive\\Finanzen\\Lizensen\\Microsoft\\keys\\subscriptionKey1")));
+        String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/Users/edleijnse/OneDrive/Finanzen/Lizensen/Microsoft/keys/subscriptionKey1")));
+
 
         testee.setSubscriptionKey(mySubscriptionKey);
 
@@ -43,8 +45,10 @@ public class ExtractPictureMetaDataTest {
             //        "/Volumes/MyDrive02/Lightroom/visionTest/MyLightroomVision.csv", true );
             // testee.createCSVFile("/Volumes/MyDrive01/MyDrive01Original/bilderexport/MajaUndJacques",
             //       "/Volumes/MyDrive01/MyDrive01Original/bilderexport/MajaUndJacques/MyLightroomVision.csv", true );
-            testee.createCSVFile("y:\\MyDrive01Original\\bilderexport\\MajaUndJacques",
-                    "y:\\MyDrive01Original\\bilderexport\\MajaUndJacques\\MyLightroomVision.csv", true );
+            // testee.createCSVFile("y:\\MyDrive01Original\\bilderexport\\MajaUndJacques",
+            //         "y:\\MyDrive01Original\\bilderexport\\MajaUndJacques\\MyLightroomVision.csv", true );
+            testee.createCSVFile("/Volumes/MyDrive01/BilderExport/2019",
+                    "/Volumes/MyDrive01/MyLightroomWithoutVision.csv", false );
             // testee.createCSVFile("/Volumes/MyDrive01/Lightroom/2001","/Volumes/MyDrive01/MyLightroom.csv" );
             // testee.createCSVFile("e:\\lightroom\\2018\\2018-07-08\\","e:\\lightroom\\MyLightroom.csv",true );
             // testee.createCSVFile("e:\\lightroom\\2018\\","e:\\lightroom\\MyLightroom.csv" );
