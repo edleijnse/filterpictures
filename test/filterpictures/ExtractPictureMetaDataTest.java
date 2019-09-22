@@ -47,8 +47,8 @@ public class ExtractPictureMetaDataTest {
             //       "/Volumes/MyDrive01/MyDrive01Original/bilderexport/MajaUndJacques/MyLightroomVision.csv", true );
             // testee.createCSVFile("y:\\MyDrive01Original\\bilderexport\\MajaUndJacques",
             //         "y:\\MyDrive01Original\\bilderexport\\MajaUndJacques\\MyLightroomVision.csv", true );
-            testee.createCSVFile("/Volumes/MyDrive01/mydrive01original/bilderexport/Creativa 2017",
-                    "/Volumes/MyDrive01/MyLightroomWithVision.csv", true );
+            testee.createCSVFile("/Volumes/MyDrive01/BilderExport/Ameno 2019",
+                    "/Volumes/MyDrive01/BilderExportAmeno2019.csv", true );
             // testee.createCSVFile("/Volumes/MyDrive01/Lightroom/2001","/Volumes/MyDrive01/MyLightroom.csv" );
             // testee.createCSVFile("e:\\lightroom\\2018\\2018-07-08\\","e:\\lightroom\\MyLightroom.csv",true );
             // testee.createCSVFile("e:\\lightroom\\2018\\","e:\\lightroom\\MyLightroom.csv" );
