@@ -1,5 +1,6 @@
 package filterpictures;
 
+import com.thoughtworks.xstream.XStream;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
@@ -7,10 +8,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.Stream;
 
 
 public class ExtractPictureContentDataTest {
+    Map<String,Integer> myTags = new TreeMap<>();
 
     @Test
     public void getPictureContentTest() throws IOException {
@@ -54,7 +57,22 @@ public class ExtractPictureContentDataTest {
         ExtractPictureContentData testee = new ExtractPictureContentData("/Volumes/MyDrive01/Lightroom/2018", "/Volumes/MyDrive01/MyLightroom.csv");
         File myNewFile = testee.compressJpg(inFile);
     }
+    public String extractTagsTest (String iTags){
+        String oTags = iTags;
+        String[] arrayOfStr = iTags.split("%");
+        for (String myTagString : arrayOfStr) {
+            Integer myValue = myTags.get(myTagString);
+            if (myValue!=null){
+                myValue++;
+            } else {
+                myValue=1;
+            }
 
+            myTags.put(myTagString,myValue);
+        }
+
+        return oTags;
+    }
     @Test
     public void extractVisionTagsTest() throws IOException {
         try {
@@ -70,15 +88,25 @@ public class ExtractPictureContentDataTest {
                         String imageName = line.substring(0, myIndexImageEnd);
                         String imageDescription = line.substring(myIndexContentBegin + 1, myIndexContentEnd);
                         String imageTags = line.substring(myIndexTagsBegin + 1);
+                        String oTags = extractTagsTest(imageTags);
                         String myOutput = imageName + ";" +
                                 imageDescription + ";" +
-                                imageTags;
+                                oTags;
                         return myOutput;
                     });
 
             System.out.println("<!-----Filtering the file data using Java8 filtering-----!>");
             lines.forEach(System.out::println);
             lines.close();
+
+            XStream xstream = new XStream();
+            System.out.println(xstream.toXML(myTags));
+            System.out.println("myTags size: " + myTags.size());
+
+            myTags.entrySet().forEach(entry->{
+                System.out.println(entry.getKey()+" "+entry.getValue());
+            });
+
         } catch (IOException io) {
             io.printStackTrace();
         }
