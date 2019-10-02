@@ -67,9 +67,12 @@ public class ExtractPictureContentDataTest {
                         int myIndexContentEnd = StringUtils.ordinalIndexOf(line, ",", 74);
                         int myIndexTagsBegin = StringUtils.ordinalIndexOf(line, ",", 74);
                         int myIndexImageEnd = StringUtils.ordinalIndexOf(line, ",", 1);
-                        String myOutput = line.substring(0,myIndexImageEnd ) + ";" +
-                                line.substring(myIndexContentBegin + 1, myIndexContentEnd) + ";" +
-                                line.substring(myIndexTagsBegin + 1);
+                        String imageName = line.substring(0, myIndexImageEnd);
+                        String imageDescription = line.substring(myIndexContentBegin + 1, myIndexContentEnd);
+                        String imageTags = line.substring(myIndexTagsBegin + 1);
+                        String myOutput = imageName + ";" +
+                                imageDescription + ";" +
+                                imageTags;
                         return myOutput;
                     });
 
