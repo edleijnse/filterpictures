@@ -76,34 +76,17 @@ public class ExtractPictureContentDataTest {
     @Test
     public void extractVisionTagsTest() throws IOException {
         try {
+            Map<String,Integer> visionTags = new TreeMap<>();
             String fileName = "src/main/resources/ExportTest/BilderExportAmeno2019.csv";
-            Stream<String> lines = Files
-                    .lines(Paths.get(fileName))
-                    .filter(line -> line.contains("%"))
-                    .map(line -> {
-                        int myIndexContentBegin = StringUtils.ordinalIndexOf(line, ",", 73);
-                        int myIndexContentEnd = StringUtils.ordinalIndexOf(line, ",", 74);
-                        int myIndexTagsBegin = StringUtils.ordinalIndexOf(line, ",", 74);
-                        int myIndexImageEnd = StringUtils.ordinalIndexOf(line, ",", 1);
-                        String imageName = line.substring(0, myIndexImageEnd);
-                        String imageDescription = line.substring(myIndexContentBegin + 1, myIndexContentEnd);
-                        String imageTags = line.substring(myIndexTagsBegin + 1);
-                        String oTags = extractTagsTest(imageTags);
-                        String myOutput = imageName + ";" +
-                                imageDescription + ";" +
-                                oTags;
-                        return myOutput;
-                    });
+            ExtractPictureContentData testee = new ExtractPictureContentData("src/main/resources/ExportTest", "src/main/resources//MyLightroom.csv");
 
-            System.out.println("<!-----Filtering the file data using Java8 filtering-----!>");
-            lines.forEach(System.out::println);
-            lines.close();
+            visionTags = testee.extractVisionTags(fileName);
 
             XStream xstream = new XStream();
-            System.out.println(xstream.toXML(myTags));
-            System.out.println("myTags size: " + myTags.size());
+            System.out.println(xstream.toXML(visionTags));
+            System.out.println("myTags size: " + visionTags.size());
 
-            myTags.entrySet().forEach(entry->{
+            visionTags.entrySet().forEach(entry->{
                 System.out.println(entry.getKey()+" "+entry.getValue());
             });
 

@@ -1,8 +1,8 @@
 package filterpictures;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
@@ -23,13 +23,65 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
+import java.util.stream.Stream;
 
 public class ExtractPictureContentData {
     private String startsWithDirectory;
     private String csvFile;
+    private Map<String,Integer> locTags = new TreeMap<>();
+    private String extractTags(String iTags){
+        String oTags = iTags;
+        String[] arrayOfStr = iTags.split("%");
+        for (String myTagString : arrayOfStr) {
+            Integer myValue = locTags.get(myTagString);
+            if (myValue!=null){
+                myValue++;
+            } else {
+                myValue=1;
+            }
 
+            locTags.put(myTagString,myValue);
+        }
+
+        return oTags;
+    }
+    public Map<String,Integer> extractVisionTags(String iFileName) throws IOException {
+        try {
+            String fileName = iFileName;
+            Stream<String> lines = Files
+                    .lines(Paths.get(fileName))
+                    .filter(line -> line.contains("%"))
+                    .map(line -> {
+                        int myIndexContentBegin = StringUtils.ordinalIndexOf(line, ",", 73);
+                        int myIndexContentEnd = StringUtils.ordinalIndexOf(line, ",", 74);
+                        int myIndexTagsBegin = StringUtils.ordinalIndexOf(line, ",", 74);
+                        int myIndexImageEnd = StringUtils.ordinalIndexOf(line, ",", 1);
+                        String imageName = line.substring(0, myIndexImageEnd);
+                        String imageDescription = line.substring(myIndexContentBegin + 1, myIndexContentEnd);
+                        String imageTags = line.substring(myIndexTagsBegin + 1);
+                        String oTags = extractTags(imageTags);
+                        String myOutput = imageName + ";" +
+                                imageDescription + ";" +
+                                oTags;
+                        return myOutput;
+                    });
+            // lines.forEach(System.out::println);
+            // any action required on lines, for instance count:
+            lines.count();
+            lines.close();
+
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
+
+        return locTags;
+    }
 
     private static String subscriptionKey = "MY-KEY-HERE";
 
