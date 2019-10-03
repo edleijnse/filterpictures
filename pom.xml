@@ -49,20 +49,16 @@
 
         <!-- https://mvnrepository.com/artifact/junit/junit -->
 
-
+        <!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream -->
 
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
-            <version>1.4.10</version>
+            <version>1.4.11.1</version>
             <scope>compile</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.adobe.xmp/xmpcore -->
-        <dependency>
-            <groupId>com.adobe.xmp</groupId>
-            <artifactId>xmpcore</artifactId>
-            <version>5.1.2</version>
-        </dependency>
+
         <dependency>
             <groupId>com.drewnoakes</groupId>
             <artifactId>metadata-extractor</artifactId>

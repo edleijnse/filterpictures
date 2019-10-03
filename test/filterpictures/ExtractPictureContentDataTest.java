@@ -82,9 +82,9 @@ public class ExtractPictureContentDataTest {
 
             visionTags = testee.extractVisionTags(fileName);
 
-            XStream xstream = new XStream();
+            /*XStream xstream = new XStream();
             System.out.println(xstream.toXML(visionTags));
-            System.out.println("myTags size: " + visionTags.size());
+            System.out.println("myTags size: " + visionTags.size());*/
 
             visionTags.entrySet().forEach(entry->{
                 System.out.println(entry.getKey()+" "+entry.getValue());
