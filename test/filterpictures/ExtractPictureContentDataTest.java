@@ -86,10 +86,11 @@ public class ExtractPictureContentDataTest {
             System.out.println(xstream.toXML(visionTags));
             System.out.println("myTags size: " + visionTags.size());*/
 
-            visionTags.entrySet().forEach(entry->{
+            visionTags.entrySet().stream().filter(entry->{
+                return (entry.getValue()>99);
+            }).forEach(entry->{
                 System.out.println(entry.getKey()+" "+entry.getValue());
             });
-
         } catch (IOException io) {
             io.printStackTrace();
         }
