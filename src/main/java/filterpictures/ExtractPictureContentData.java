@@ -25,33 +25,45 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ExtractPictureContentData {
     private String startsWithDirectory;
     private String csvFile;
-    private Map<String,Integer> locTags = new TreeMap<>();
-    private String extractTags(String iTags){
+    private Map<String, Integer> locTags = new TreeMap<>();
+
+    private String extractTags(String iTags) {
         String oTags = iTags;
         String[] arrayOfStr = iTags.split("%");
         for (String myTagString : arrayOfStr) {
             Integer myValue = locTags.get(myTagString);
-            if (myValue!=null){
+            if (myValue != null) {
                 myValue++;
             } else {
-                myValue=1;
+                myValue = 1;
             }
 
-            locTags.put(myTagString,myValue);
+            locTags.put(myTagString, myValue);
         }
 
         return oTags;
     }
-    public Map<String,Integer> extractVisionTags(String iFileName) throws IOException {
+
+    public Map<String, Integer> topTags(Map<String, Integer> inputTags, Integer topCount) {
+
+        // https://dzone.com/articles/how-to-sort-a-map-by-value-in-java-8
+        final Map<String, Integer> sortedByCount = inputTags.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        Map<String, Integer> topTags  = sortedByCount.entrySet().stream().limit(topCount)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        return topTags;
+    }
+
+    public Map<String, Integer> extractVisionTags(String iFileName) throws IOException {
         try {
             String fileName = iFileName;
             Stream<String> lines = Files
@@ -88,7 +100,7 @@ public class ExtractPictureContentData {
 
     public static final String uriBase =
             "https://westeurope.api.cognitive.microsoft.com/vision/v1.0/analyze";
-       //    "https://northeurope.api.cognitive.microsoft.com/vision/v1.0/analyze";
+    //    "https://northeurope.api.cognitive.microsoft.com/vision/v1.0/analyze";
 
 
     public ExtractPictureContentData(String startsWithDirectory, String csvFile) {
@@ -96,14 +108,15 @@ public class ExtractPictureContentData {
         this.csvFile = csvFile;
     }
 
+
     public void setSubstringKey(String myKey) {
         subscriptionKey = myKey;
     }
 
-    public File compressJpg (File imageFile) throws IOException {
+    public File compressJpg(File imageFile) throws IOException {
         System.out.println(imageFile.getAbsolutePath());
         String myNewFileName = imageFile.getAbsolutePath();
-        myNewFileName = myNewFileName.replace(".jpg","_compressed.jpg");
+        myNewFileName = myNewFileName.replace(".jpg", "_compressed.jpg");
         System.out.println(myNewFileName);
         // File compressedImageFile = new File (myNewFileName);
         File compressedImageFile = File.createTempFile("pattern", ".suffix");
@@ -115,7 +128,7 @@ public class ExtractPictureContentData {
             BufferedImage image = ImageIO.read(is);
             // get all image writers for JPG format
             Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
-            if (!writers.hasNext()){
+            if (!writers.hasNext()) {
                 throw new IllegalStateException("No writers found");
             }
             ImageWriter writer = (ImageWriter) writers.next();
@@ -195,17 +208,17 @@ public class ExtractPictureContentData {
                 try {
                     myCode = json.getString("code");
                     // System.out.println("Code: " + myCode);
-                } catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
-                if (myCode.contains("InvalidImageSize")){
+                if (myCode.contains("InvalidImageSize")) {
                     System.out.println("Invalid image size");
                     return myPictureMetadata;
                 }
                 JSONArray descriptionArr = json.getJSONObject("description").getJSONArray("captions");
                 descriptionArr.forEach(element -> {
-                    JSONObject myElement = (JSONObject)element;
+                    JSONObject myElement = (JSONObject) element;
                     String textContent = myElement.getString("text");
                     // System.out.println("content: " + textContent);
                     myPictureMetadata.setVISION_CONTENT(Optional.ofNullable(textContent));
@@ -215,7 +228,7 @@ public class ExtractPictureContentData {
                 tagsArr.forEach(element -> {
                     String tagName = element.toString();
                     // System.out.println(tagName);
-                    myTagsTmp[0] +=element.toString()+"%";
+                    myTagsTmp[0] += element.toString() + "%";
 
                 });
                 String myTags = myTagsTmp[0];
@@ -230,7 +243,7 @@ public class ExtractPictureContentData {
 
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        } catch (JSONException e){
+        } catch (JSONException e) {
             System.out.println("JSON Exception: " + e.getLocalizedMessage());
 
         }

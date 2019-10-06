@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 
 public class ExtractPictureContentDataTest {
-    Map<String,Integer> myTags = new TreeMap<>();
+    Map<String, Integer> myTags = new TreeMap<>();
 
     @Test
     public void getPictureContentTest() throws IOException {
@@ -57,26 +57,43 @@ public class ExtractPictureContentDataTest {
         ExtractPictureContentData testee = new ExtractPictureContentData("/Volumes/MyDrive01/Lightroom/2018", "/Volumes/MyDrive01/MyLightroom.csv");
         File myNewFile = testee.compressJpg(inFile);
     }
-    public String extractTagsTest (String iTags){
+
+    public String extractTagsTest(String iTags) {
         String oTags = iTags;
         String[] arrayOfStr = iTags.split("%");
         for (String myTagString : arrayOfStr) {
             Integer myValue = myTags.get(myTagString);
-            if (myValue!=null){
+            if (myValue != null) {
                 myValue++;
             } else {
-                myValue=1;
+                myValue = 1;
             }
 
-            myTags.put(myTagString,myValue);
+            myTags.put(myTagString, myValue);
         }
 
         return oTags;
     }
+
+    @Test
+    public void topTagsTest() throws IOException {
+        ExtractPictureContentData testee = new ExtractPictureContentData("src/main/resources/ExportTest", "src/main/resources//MyLightroom.csv");
+        Map<String, Integer> visionTags = new TreeMap<>();
+        String fileName = "src/main/resources/ExportTest/BilderExportAmeno2019.csv";
+
+        Map<String, Integer> topTags = new TreeMap<>();
+        visionTags = testee.extractVisionTags(fileName);
+        topTags = testee.topTags(visionTags, 50);
+        topTags.entrySet().
+                forEach(entry -> {
+                    System.out.println(entry.getKey() + " " + entry.getValue());
+                });
+    }
+
     @Test
     public void extractVisionTagsTest() throws IOException {
         try {
-            Map<String,Integer> visionTags = new TreeMap<>();
+            Map<String, Integer> visionTags = new TreeMap<>();
             String fileName = "src/main/resources/ExportTest/BilderExportAmeno2019.csv";
             ExtractPictureContentData testee = new ExtractPictureContentData("src/main/resources/ExportTest", "src/main/resources//MyLightroom.csv");
 
@@ -86,10 +103,10 @@ public class ExtractPictureContentDataTest {
             System.out.println(xstream.toXML(visionTags));
             System.out.println("myTags size: " + visionTags.size());*/
 
-            visionTags.entrySet().stream().filter(entry->{
-                return (entry.getValue()>99);
-            }).forEach(entry->{
-                System.out.println(entry.getKey()+" "+entry.getValue());
+            visionTags.entrySet().stream().filter(entry -> {
+                return (entry.getValue() > 99);
+            }).forEach(entry -> {
+                System.out.println(entry.getKey() + " " + entry.getValue());
             });
         } catch (IOException io) {
             io.printStackTrace();
