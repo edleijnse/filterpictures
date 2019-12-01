@@ -35,7 +35,8 @@ public class ExtractPictureContentDataTest {
         File myFileCompressed = testee.compressJpg(myFile);
         try {
             // String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/Users/edleijnse/keys/subscriptionKey1")));
-            String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("C:\\Users\\edlei\\OneDrive\\Finanzen\\Lizensen\\Microsoft\\keys\\subscriptionKey1")));
+            // String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("C:\\Users\\edlei\\OneDrive\\Finanzen\\Lizensen\\Microsoft\\keys\\subscriptionKey1")));
+            String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/home/edleijnse/keys/Microsoft/keys/subscriptionKey1")));
             testee.setSubstringKey(mySubscriptionKey);
             PictureMetaData output = testee.getPictureContent(myFileCompressed);
             System.out.println(fileName);
@@ -79,11 +80,12 @@ public class ExtractPictureContentDataTest {
     public void topTagsTest() throws IOException {
         ExtractPictureContentData testee = new ExtractPictureContentData("src/main/resources/ExportTest", "src/main/resources//MyLightroom.csv");
         Map<String, Integer> visionTags = new TreeMap<>();
-        String fileName = "src/main/resources/ExportTest/BilderExportAmeno2019.csv";
+        // String fileName = "src/main/resources/ExportTest/BilderExportAmeno2019.csv";
+        String fileName = "/home/edleijnse/filterpicturesAnnalis20191201.csv";
 
         Map<String, Integer> topTags = new TreeMap<>();
         visionTags = testee.extractVisionTags(fileName);
-        topTags = testee.topTags(visionTags, 50);
+        topTags = testee.topTags(visionTags, 500);
         topTags.entrySet().
                 forEach(entry -> {
                     System.out.println(entry.getKey() + " " + entry.getValue());

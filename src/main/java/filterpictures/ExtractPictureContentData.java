@@ -119,7 +119,7 @@ public class ExtractPictureContentData {
         myNewFileName = myNewFileName.replace(".jpg", "_compressed.jpg");
         System.out.println(myNewFileName);
         // File compressedImageFile = new File (myNewFileName);
-        File compressedImageFile = File.createTempFile("pattern", ".suffix");
+        File compressedImageFile = File.createTempFile(myNewFileName, ".suffix");
 
         try (InputStream is = new FileInputStream(imageFile)) {
             OutputStream os = new FileOutputStream(compressedImageFile);

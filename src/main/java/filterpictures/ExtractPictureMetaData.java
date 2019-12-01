@@ -883,8 +883,8 @@ public class ExtractPictureMetaData {
                                 if (withVision){
                                     ExtractPictureContentData extract = new ExtractPictureContentData(this.startsWithDirectory, this.csvFile);
                                     extract.setSubstringKey(this.getSubscriptionKey());
-
-                                    PictureMetaData myMetadata = extract.getPictureContent(file);
+                                    File fileCompressed = extract.compressJpg(file);
+                                    PictureMetaData myMetadata = extract.getPictureContent(fileCompressed);
                                     return myMetadata;
                                 } else {
                                     PictureMetaData myMetadata = getPictureMetaDataExif(file);

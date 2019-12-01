@@ -16,12 +16,15 @@ public class ExtractPictureRun {
 
     }
     public ExtractPictureRun() throws IOException {
-        this.createCSVFileRun("/Volumes/MyDrive01/BilderExport/201902ExtractSmall","/Volumes/MyDrive01/BilderExport/MyLightroomVision201902ExtractSmall.csv");
+        // this.createCSVFileRun("/Volumes/MyDrive01/BilderExport/201902ExtractSmall","/Volumes/MyDrive01/BilderExport/MyLightroomVision201902ExtractSmall.csv");
+        this.createCSVFileRun("/home/edleijnse/Annalis", "/home/edleijnse/filterpicturesAnnalis20191201.csv");
     }
     public void createCSVFileRun(String startDir, String writeCSV) throws IOException {
         ExtractPictureMetaData testee = new ExtractPictureMetaData(startDir,writeCSV, true );
         // String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("C:\\Users\\edlei\\OneDrive\\Finanzen\\Lizensen\\Microsoft\\keys\\subscriptionKey1")));
-        String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/Users/edleijnse/OneDrive/Finanzen/Lizensen/Microsoft/keys/subscriptionKey1")));
+        // String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/Users/edleijnse/OneDrive/Finanzen/Lizensen/Microsoft/keys/subscriptionKey1")));
+        String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/home/edleijnse/keys/Microsoft/subscriptionKey1")));
+
 
 
         testee.setSubscriptionKey(mySubscriptionKey);
