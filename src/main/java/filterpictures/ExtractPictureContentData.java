@@ -160,10 +160,10 @@ public class ExtractPictureContentData {
     }
 
 
-    public static PictureMetaData getPictureContent(File file) throws Exception {
+    public static PictureMetaData getPictureContent(File origFile, File file) throws Exception {
 
 
-        PictureMetaData myPictureMetadata = ExtractPictureMetaData.getPictureMetaDataExif(file);
+        PictureMetaData myPictureMetadata = ExtractPictureMetaData.getPictureMetaDataExif(origFile);
 
 
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {

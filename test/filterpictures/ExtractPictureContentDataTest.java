@@ -38,7 +38,7 @@ public class ExtractPictureContentDataTest {
             // String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("C:\\Users\\edlei\\OneDrive\\Finanzen\\Lizensen\\Microsoft\\keys\\subscriptionKey1")));
             String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/home/edleijnse/keys/Microsoft/keys/subscriptionKey1")));
             testee.setSubstringKey(mySubscriptionKey);
-            PictureMetaData output = testee.getPictureContent(myFileCompressed);
+            PictureMetaData output = testee.getPictureContent(myFile,myFileCompressed);
             System.out.println(fileName);
             System.out.println(output.getVISION_CONTENT());
             System.out.println(output.getVISION_TAGS());
