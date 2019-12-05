@@ -12,6 +12,7 @@ import com.thebuzzmedia.exiftool.exceptions.UnsupportedFeatureException;
 import com.thebuzzmedia.exiftool.logs.Logger;
 import com.thebuzzmedia.exiftool.logs.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
+import filterpictures.Command;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -112,7 +113,7 @@ public class ExtractPictureMetaData {
 
     public static Map<Tag, String> parseFromExif(File image) throws Exception {
         // ExifTool path must be defined as a system property (`exiftool.path`),
-        // but path can be set using `withPath` method.
+        // but path can be set using `withPath` method
         return exifTool.getImageMeta(image, asList(
                 StandardTag.ISO,
                 StandardTag.APERTURE,
@@ -890,6 +891,8 @@ public class ExtractPictureMetaData {
                                     PictureMetaData myMetadata = getPictureMetaDataExif(file);
                                     return myMetadata;
                                 }
+
+
                             };
                             Future<PictureMetaData> future = executorService.submit(callable);
                             listFuturePictureMetaData.add(future);
@@ -907,6 +910,22 @@ public class ExtractPictureMetaData {
                 try {
                     PictureMetaData myMetadata = pictureMetaDataFuture.get();
                     processMetaData(myMetadata, fileWriter);
+                    System.out.println("startsWithDirectory: " + startsWithDirectory);
+                    System.out.println(("absolutePath: " + pictureMetaDataFuture.get().absolutePath));
+                    Command myCommand = new Command(startsWithDirectory);
+                    String doExecute = "exiftool -keywords=";
+                    if (pictureMetaDataFuture.get().getVISION_TAGS().isPresent()){
+                        doExecute +=pictureMetaDataFuture.get().getVISION_TAGS().get();
+                        doExecute = doExecute.replaceAll("%",",");
+                        // letzte Komma entfernen
+                        // doExecute = doExecute.substring(0, doExecute.length()-1);
+
+                        doExecute   += " " + pictureMetaDataFuture.get().absolutePath.get();
+                        System.out.println("doExecute: " + doExecute);
+                        myCommand.exec(doExecute);
+                    }
+
+
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();

@@ -17,7 +17,7 @@ public class ExtractPictureRun {
     }
     public ExtractPictureRun() throws IOException {
         // this.createCSVFileRun("/Volumes/MyDrive01/BilderExport/201902ExtractSmall","/Volumes/MyDrive01/BilderExport/MyLightroomVision201902ExtractSmall.csv");
-        this.createCSVFileRun("/home/edleijnse/Annalis", "/home/edleijnse/filterpicturesAnnalis20191201.csv");
+        this.createCSVFileRun("/home/edleijnse/Annalis", "/home/edleijnse/filterpicturesAnnalis20191205.csv");
     }
     public void createCSVFileRun(String startDir, String writeCSV) throws IOException {
         ExtractPictureMetaData testee = new ExtractPictureMetaData(startDir,writeCSV, true );
