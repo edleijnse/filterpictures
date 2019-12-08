@@ -81,14 +81,17 @@ public class ExtractPictureContentDataTest {
         ExtractPictureContentData testee = new ExtractPictureContentData("src/main/resources/ExportTest", "src/main/resources//MyLightroom.csv");
         Map<String, Integer> visionTags = new TreeMap<>();
         // String fileName = "src/main/resources/ExportTest/BilderExportAmeno2019.csv";
-        String fileName = "/home/edleijnse/filterpicturesAnnalis20191201.csv";
+        String fileName = "src/main/resources/ExportTest/filterpicturesBilderExportAnnalis20191208.csv";
+        // String fileName = "/home/edleijnse/filterpicturesAnnalis20191201.csv";
 
         Map<String, Integer> topTags = new TreeMap<>();
         visionTags = testee.extractVisionTags(fileName);
         topTags = testee.topTags(visionTags, 500);
+        final int[] ii = {1};
         topTags.entrySet().
                 forEach(entry -> {
-                    System.out.println(entry.getKey() + " " + entry.getValue());
+                    System.out.println(ii[0]+ " " +entry.getKey() + " " + entry.getValue());
+                    ii[0]++;
                 });
     }
 
