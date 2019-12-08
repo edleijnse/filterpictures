@@ -915,12 +915,15 @@ public class ExtractPictureMetaData {
                     Command myCommand = new Command(startsWithDirectory);
                     // https://exiftool.org/exiftool_pod.html
                     // exiftool -keywords=EXIF -keywords=editor dst.jpg
-                    String doExecute = "exiftool -keywords=";
+                    String doExecute = "exiftool ";
                     if (pictureMetaDataFuture.get().getVISION_TAGS().isPresent()){
-                        doExecute +=pictureMetaDataFuture.get().getVISION_TAGS().get();
-                        doExecute = doExecute.replaceAll("%",",");
-                        // letzte Komma entfernen
-                        // doExecute = doExecute.substring(0, doExecute.length()-1);
+
+                        String[] arrOfStr = pictureMetaDataFuture.get().getVISION_TAGS().get().split("%");
+
+                        for (String keyword : arrOfStr){
+                            System.out.println(keyword);
+                            doExecute+=" -keywords="+keyword;
+                        }
 
                         doExecute   += " " + pictureMetaDataFuture.get().absolutePath.get();
                         System.out.println("doExecute: " + doExecute);
