@@ -913,6 +913,8 @@ public class ExtractPictureMetaData {
                     System.out.println("startsWithDirectory: " + startsWithDirectory);
                     System.out.println(("absolutePath: " + pictureMetaDataFuture.get().absolutePath));
                     Command myCommand = new Command(startsWithDirectory);
+                    // https://exiftool.org/exiftool_pod.html
+                    // exiftool -keywords=EXIF -keywords=editor dst.jpg
                     String doExecute = "exiftool -keywords=";
                     if (pictureMetaDataFuture.get().getVISION_TAGS().isPresent()){
                         doExecute +=pictureMetaDataFuture.get().getVISION_TAGS().get();
