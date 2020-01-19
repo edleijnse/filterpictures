@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -405,7 +406,6 @@ public class ExtractPictureMetaData {
     void appendnewline(StringBuilder fileWriter) throws IOException {
         fileWriter.append("\n");
     }
-
 
 
     void processMetaData(PictureMetaData myMetadata, FileWriter fileWriter) throws IOException {
@@ -861,6 +861,56 @@ public class ExtractPictureMetaData {
         appendnewline(fileWriter);
     }
 
+    public void handleDirectoryCopyFile( String startsWithDirectory, String copyDirectory) {
+        try {
+            // https://www.codejava.net/java-core/concurrency/java-concurrency-understanding-thread-pool-and-executors
+            // Better: completable Future https://www.deadcoderising.com/java8-writing-asynchronous-code-with-completablefuture/
+
+
+            System.out.println("handleDirectoryCopyFile start");
+            Files.walk(Paths.get(startsWithDirectory))
+                    .filter(p -> {
+                        return ((p.toString().toLowerCase().endsWith(".cr2")) || (p.toString().toLowerCase().endsWith(".cr3")) || (p.toString().toLowerCase().endsWith(".jpg")));
+                    })
+                    .forEach(item -> {
+
+                        File file = item.toFile();
+                        if (file.isFile()) {
+                           String sourceFile = "";
+                           sourceFile = file.getAbsolutePath();
+                           String destFile = copyDirectory.trim()+"\\"+ newFileName(file.getName());
+                            try {
+                                copyFile(sourceFile,destFile);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+            System.out.println("handleDirectoryCopyFile end");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("handleDirectoryWalker completed");
+    }
+
+    /**
+     * Java 7 way to copy a file from one location to another
+     * @param from
+     * @param to
+     * @throws IOException
+     */
+    public static void copyFile(String from, String to) throws IOException{
+        Path src = Paths.get(from);
+        Path dest = Paths.get(to);
+        Files.copy(src, dest);
+    }
+
+    public String newFileName(String fileNameIn){
+        String fileNameOut = fileNameIn;
+        fileNameOut += "_extenstion";
+        return  fileNameOut;
+    }
 
     void handleDirectoryWalker(FileWriter fileWriter, String startsWithDirectory, Boolean withVision) {
         try {
@@ -881,7 +931,7 @@ public class ExtractPictureMetaData {
 
                             Callable<PictureMetaData> callable = () -> {
 
-                                if (withVision){
+                                if (withVision) {
                                     ExtractPictureContentData extract = new ExtractPictureContentData(this.startsWithDirectory, this.csvFile);
                                     extract.setSubstringKey(this.getSubscriptionKey());
                                     File fileCompressed = extract.compressJpg(file);
@@ -916,20 +966,19 @@ public class ExtractPictureMetaData {
                     // https://exiftool.org/exiftool_pod.html
                     // exiftool -keywords=EXIF -keywords=editor dst.jpg
                     String doExecute = "exiftool ";
-                    if (pictureMetaDataFuture.get().getVISION_TAGS().isPresent()){
+                    if (pictureMetaDataFuture.get().getVISION_TAGS().isPresent()) {
 
                         String[] arrOfStr = pictureMetaDataFuture.get().getVISION_TAGS().get().split("%");
 
-                        for (String keyword : arrOfStr){
+                        for (String keyword : arrOfStr) {
                             System.out.println(keyword);
-                            doExecute+=" -keywords="+keyword;
+                            doExecute += " -keywords=" + keyword;
                         }
 
-                        doExecute   += " " + pictureMetaDataFuture.get().absolutePath.get();
+                        doExecute += " " + pictureMetaDataFuture.get().absolutePath.get();
                         System.out.println("doExecute: " + doExecute);
                         myCommand.exec(doExecute);
                     }
-
 
 
                 } catch (InterruptedException e) {
