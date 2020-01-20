@@ -18,7 +18,7 @@ public class ExtractPictureRun {
     public ExtractPictureRun() throws IOException {
         // this.createCSVFileRun("/Volumes/MyDrive01/BilderExport/201902ExtractSmall","/Volumes/MyDrive01/BilderExport/MyLightroomVision201902ExtractSmall.csv");
         // this.createCSVFileRun("/home/edleijnse/BilderExport/Annalis/Transformationen", "/home/edleijnse/filterpicturesBilderExportAnnalisTransformationen20191206.csv");
-        this.copyFilesRun("E:\\BilderImport\\Annalis\\BilderAnnalis","E:\\test\\AesthetikDesZerfalls", "E:\\test\\AesthetikDesZerfallsCopy");
+        this.copyFilesRun("E:\\BilderImport\\Annalis\\BilderAnnalis","E:\\BilderExportBearbeitet\\Annalis", "E:\\BilderExportWithTitle");
         // this.buildTitleMap("E:\\BilderImport\\Annalis\\BilderAnnalis");
     }
     public void createCSVFileRun(String startDir, String writeCSV) throws IOException {

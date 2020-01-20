@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -932,7 +933,12 @@ public class ExtractPictureMetaData {
     public static void copyFile(String from, String to) throws IOException{
         Path src = Paths.get(from);
         Path dest = Paths.get(to);
-        Files.copy(src, dest);
+        try {
+            Files.copy(src, dest);
+        } catch (FileAlreadyExistsException ex){
+            // do nothing
+            System.out.println("Datei bereits vorhanden: " +dest.toString());
+        }
     }
     public void buildTitleMap(String iFile) throws IOException{
         System.out.println("buildTitleMap: " + iFile);
@@ -945,6 +951,8 @@ public class ExtractPictureMetaData {
             while ((line = in.readLine()) != null) {
                 String titleKey = line.substring(0,4);
                 String title = line.substring(5);
+                // title = title.replaceAll("[^\\p{Alpha}\\p{Digit}]+","");
+                title = title.replaceAll("/", " ");
                 this.titleMap.put(titleKey,title);
             }
             in.close();
