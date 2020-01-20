@@ -12,18 +12,13 @@ import com.thebuzzmedia.exiftool.exceptions.UnsupportedFeatureException;
 import com.thebuzzmedia.exiftool.logs.Logger;
 import com.thebuzzmedia.exiftool.logs.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
-import filterpictures.Command;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.*;
 
 import static java.util.Arrays.asList;
@@ -37,6 +32,7 @@ public class ExtractPictureMetaData {
     private Boolean withVision;
     private static final Logger log = LoggerFactory.getLogger(ExtractPictureMetaData.class);
     private String subscriptionKey = "";
+    private Map<String, String> titleMap = new TreeMap<>();
 
 
     private static ExifTool exifTool;
@@ -861,6 +857,39 @@ public class ExtractPictureMetaData {
         appendnewline(fileWriter);
     }
 
+    public void handleDirectoryBuildTitleMap (String startsWithDirectory){
+        try {
+            // https://www.codejava.net/java-core/concurrency/java-concurrency-understanding-thread-pool-and-executors
+            // Better: completable Future https://www.deadcoderising.com/java8-writing-asynchronous-code-with-completablefuture/
+
+
+            System.out.println("handleDirectoryBuildTitleMap start");
+            Files.walk(Paths.get(startsWithDirectory))
+                    .filter(p -> {
+                        return (p.toString().toLowerCase().endsWith(".txt"));
+                    })
+                    .forEach(item -> {
+
+                        File file = item.toFile();
+                        if (file.isFile()) {
+                            String sourceFile = "";
+                            sourceFile = file.getAbsolutePath();
+
+                            try {
+                                buildTitleMap(sourceFile);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+            System.out.println("handleDirectoryBuildTitleMap end");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("handleDirectoryBuildTitleMap completed");
+    }
+
     public void handleDirectoryCopyFile( String startsWithDirectory, String copyDirectory) {
         try {
             // https://www.codejava.net/java-core/concurrency/java-concurrency-understanding-thread-pool-and-executors
@@ -878,7 +907,7 @@ public class ExtractPictureMetaData {
                         if (file.isFile()) {
                            String sourceFile = "";
                            sourceFile = file.getAbsolutePath();
-                           String destFile = copyDirectory.trim()+"\\"+ newFileName(file.getName());
+                           String destFile = copyDirectory.trim()+"\\"+ newFileNameGalleryFromTitleMap(file);
                             try {
                                 copyFile(sourceFile,destFile);
                             } catch (IOException e) {
@@ -891,7 +920,7 @@ public class ExtractPictureMetaData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("handleDirectoryWalker completed");
+        System.out.println("handleDirectoryCopyFile completed");
     }
 
     /**
@@ -905,10 +934,41 @@ public class ExtractPictureMetaData {
         Path dest = Paths.get(to);
         Files.copy(src, dest);
     }
+    public void buildTitleMap(String iFile) throws IOException{
+        System.out.println("buildTitleMap: " + iFile);
+        InputStream inputStream       = new FileInputStream(iFile);
+        Reader      inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
+        BufferedReader in = new BufferedReader(inputStreamReader);
 
-    public String newFileName(String fileNameIn){
+        String line = "";
+        try {
+            while ((line = in.readLine()) != null) {
+                String titleKey = line.substring(0,4);
+                String title = line.substring(5);
+                this.titleMap.put(titleKey,title);
+            }
+            in.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public String newFileNameGalleryFromTitleMap(File file){
+        String fileNameIn = file.getName();
         String fileNameOut = fileNameIn;
-        fileNameOut += "_extenstion";
+        int searchPos = fileNameOut.indexOf("-");
+        int startPos = -1;
+        if (searchPos>0){
+            startPos = searchPos + 1;
+        }
+        String myTitleKey = fileNameIn.substring(startPos,startPos+4);
+        String myTitle = titleMap.get(myTitleKey);
+        if (myTitle!=null){
+            int startPosPoint = fileNameIn.indexOf(".");
+            String fileNamePart1 = fileNameIn.substring(0,startPosPoint);
+            fileNameOut = fileNamePart1 + " " +  myTitle + ".jpg";
+        }
+
         return  fileNameOut;
     }
 
