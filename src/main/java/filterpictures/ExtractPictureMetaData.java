@@ -897,18 +897,48 @@ public class ExtractPictureMetaData {
             // Better: completable Future https://www.deadcoderising.com/java8-writing-asynchronous-code-with-completablefuture/
 
 
-            System.out.println("handleDirectoryCopyFile start");
+            System.out.println("handleDirectoryCopyFile start: " + startsWithDirectory) ;
             Files.walk(Paths.get(startsWithDirectory))
-                    .filter(p -> {
+                   .filter(p -> {
                         return ((p.toString().toLowerCase().endsWith(".cr2")) || (p.toString().toLowerCase().endsWith(".cr3")) || (p.toString().toLowerCase().endsWith(".jpg")));
                     })
                     .forEach(item -> {
-
                         File file = item.toFile();
                         if (file.isFile()) {
                            String sourceFile = "";
                            sourceFile = file.getAbsolutePath();
                            String destFile = copyDirectory.trim()+"\\"+ newFileNameGalleryFromTitleMap(file);
+                            try {
+                                copyFile(sourceFile,destFile);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+            System.out.println("handleDirectoryCopyFile end");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("handleDirectoryCopyFile completed");
+    }
+    public void handleDirectoryCopyFileToDatabase( String startsWithDirectory, String copyDirectory) {
+        try {
+            // https://www.codejava.net/java-core/concurrency/java-concurrency-understanding-thread-pool-and-executors
+            // Better: completable Future https://www.deadcoderising.com/java8-writing-asynchronous-code-with-completablefuture/
+
+
+            System.out.println("handleDirectoryCopyFileToDatabase start: " + startsWithDirectory) ;
+            Files.walk(Paths.get(startsWithDirectory))
+                    .filter(p -> {
+                        return ((p.toString().toLowerCase().endsWith(".cr2")) || (p.toString().toLowerCase().endsWith(".cr3")) || (p.toString().toLowerCase().endsWith(".jpg")));
+                    })
+                    .forEach(item -> {
+                        File file = item.toFile();
+                        if (file.isFile()) {
+                            String sourceFile = "";
+                            sourceFile = file.getAbsolutePath();
+                            String destFile = copyDirectory + "/" + file.getName();
                             try {
                                 copyFile(sourceFile,destFile);
                             } catch (IOException e) {

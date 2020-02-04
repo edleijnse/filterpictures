@@ -18,7 +18,12 @@ public class ExtractPictureRun {
     public ExtractPictureRun() throws IOException {
         // this.createCSVFileRun("/Volumes/MyDrive01/BilderExport/201902ExtractSmall","/Volumes/MyDrive01/BilderExport/MyLightroomVision201902ExtractSmall.csv");
         // this.createCSVFileRun("/home/edleijnse/BilderExport/Annalis/Transformationen", "/home/edleijnse/filterpicturesBilderExportAnnalisTransformationen20191206.csv");
-        this.copyFilesRun("E:\\BilderImport\\Annalis\\BilderAnnalis","E:\\BilderExportBearbeitet\\Annalis", "E:\\BilderExportWithTitle");
+
+
+        // this.copyFilesRun("/media/psf/MyDrive01/BilderImport/Annalis/BilderAnnalis","/media/psf/MyDrive01/Annalis Bilder/BilderImport/AnnalisImport", "/media/psf/MyDrive01/BilderImport/Annalis/Bilder nachbearbeitet");
+        this.copyFilesToDatabase("/media/psf/MyDrive01/BilderImport/Annalis/Bilder nachbearbeitet", "/media/psf/MyDrive01/BilderImport/Annalis/BilderExportBearbeitet3");
+
+        // this.copyFilesRun("E:\\BilderImport\\Annalis\\BilderAnnalis","E:\\BilderExportBearbeitet\\Annalis", "E:\\BilderExportWithTitle");
         // this.buildTitleMap("E:\\BilderImport\\Annalis\\BilderAnnalis");
     }
     public void createCSVFileRun(String startDir, String writeCSV) throws IOException {
@@ -41,13 +46,27 @@ public class ExtractPictureRun {
     }
     public void copyFilesRun(String dirTitleMap, String startDir, String copyDir) throws IOException {
         ExtractPictureMetaData testee = new ExtractPictureMetaData(startDir,copyDir, true );
-        String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("C:\\Users\\edlei\\OneDrive\\Finanzen\\Lizensen\\Microsoft\\keys\\subscriptionKey1")));
+        // String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("C:\\Users\\edlei\\OneDrive\\Finanzen\\Lizensen\\Microsoft\\keys\\subscriptionKey1")));
+
+        String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/home/parallels/Documents/subscriptionKey1")));
         // String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/Users/edleijnse/OneDrive/Finanzen/Lizensen/Microsoft/keys/subscriptionKey1")));
         // String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/home/edleijnse/keys/Microsoft/subscriptionKey1")));
 
         testee.setSubscriptionKey(mySubscriptionKey);
         testee.handleDirectoryBuildTitleMap(dirTitleMap);
         testee.handleDirectoryCopyFile(startDir,copyDir);
+
+    }
+    public void copyFilesToDatabase(String startDir, String copyDir) throws IOException {
+        ExtractPictureMetaData testee = new ExtractPictureMetaData(startDir,copyDir, true );
+        // String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("C:\\Users\\edlei\\OneDrive\\Finanzen\\Lizensen\\Microsoft\\keys\\subscriptionKey1")));
+
+        String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/home/parallels/Documents/subscriptionKey1")));
+        // String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/Users/edleijnse/OneDrive/Finanzen/Lizensen/Microsoft/keys/subscriptionKey1")));
+        // String mySubscriptionKey = new String(Files.readAllBytes(Paths.get("/home/edleijnse/keys/Microsoft/subscriptionKey1")));
+
+        testee.setSubscriptionKey(mySubscriptionKey);
+        testee.handleDirectoryCopyFileToDatabase(startDir,copyDir);
 
     }
     public void buildTitleMap(String startDir ) throws IOException {
